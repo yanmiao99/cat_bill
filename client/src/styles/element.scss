@@ -1,0 +1,12 @@
+// import dark theme
+@use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;
+
+:root {
+  --el-color-primary: #ffca39 !important;
+  --el-color-primary-light-3: #fcd057 !important;
+  --el-color-primary-light-5: #f8d77c !important;
+  --el-color-primary-light-7: #fce5a7 !important;
+  --el-color-primary-light-8: #fdefc9 !important;
+  --el-color-primary-light-9: #fcf3dc !important;
+  --el-color-primary-dark-2: #e3b432 !important;
+}
