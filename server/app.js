@@ -1,0 +1,33 @@
+// 创建express基本结构
+const express = require('express')
+const app = express()
+const cors = require('cors')
+const log4js = require('./utils/log4j.js')
+const {PORT} = require("./config/index.js")
+const passport = require('passport');
+
+// passport 初始化 (用于验证token)
+app.use(passport.initialize());
+require('./utils/passport')(passport);
+
+// 配置全局中间件 ( 中间键必须配置在路由的前面, 否则不生效 )
+app.use(express.json()) // 解析 json 数据
+app.use(express.urlencoded({extended: false})) // 解析 x-www-form-urlencoded 数据
+app.use(cors()) // 解决跨域
+
+// 路由
+app.get('/', (req, res) => res.send('Hello World!'))
+app.use('/api/user', require('./routes/user.js'))
+
+// 异常捕获的中间件 ( 需要放在所有路由的最后面 )
+app.use((err, req, res, next) => {
+  log4js.error('未知错误,请联系管理员!')
+  // 其他原员导致的错误
+  res.send({code: 500, msg: '未知错误,请联系管理员!'})
+})
+
+// 监听端口
+app.listen(PORT, () => {
+  log4js.info(`✅ - 当前启动的端口为 :  ${PORT}`)
+  console.log(`✅ - 当前启动的端口为 :  ${PORT}`)
+})

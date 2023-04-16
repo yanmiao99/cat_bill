@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "pro": "export NODE_ENV=production && node app.js"
+  },
+  "main": "app.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "log4js": "^6.9.1",
+    "md5": "^2.3.0",
+    "mysql2": "^3.2.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "sequelize": "^6.30.0",
+    "sequelize-cli": "^6.6.0"
+  }
+}
