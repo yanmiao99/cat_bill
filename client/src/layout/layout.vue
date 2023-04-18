@@ -1,5 +1,5 @@
 <template>
-  <div class="basic-layout">
+  <div class="basic-layout ">
     <div class="nav-side">
       <div class="logo" v-show="!isCollapse">
         <img src="@/assets/images/logo.png" alt="logo">
@@ -40,7 +40,7 @@
           <!-- 下拉菜单 -->
           <el-dropdown trigger="click" @command="handleLogout">
             <div class="user-info-tools">
-              <span>姓名</span>
+              <span>{{username}}</span>
               <el-icon>
                 <Tools/>
               </el-icon>
@@ -68,19 +68,27 @@ import {useRouter} from "vue-router"
 import {routerMenu} from "../router/routerMenu";
 import config from "../config/config";
 import storage from "../utils/storage";
+import {getCurrentUserInfo} from "../api/user";
 
 const router = useRouter()
 
 let isCollapse: Ref<boolean> = ref(false)
 
-onMounted(() => {
-// isCollapse本地获取
-  let storage_isCollapse = storage.getItem('isCollapse') || '0'
+const username = ref('')
 
+onMounted(async () => {
+  // isCollapse本地获取
+  let storage_isCollapse = storage.getItem('isCollapse') || '0'
   if (storage_isCollapse) {
     isCollapse.value = storage_isCollapse === '1'
   }
+
+  // 获取当前用户信息
+  let currentUserInfo = await getCurrentUserInfo()
+  username.value = currentUserInfo.username
+
 })
+
 
 // 获取当前路由
 let defaultActive: Ref<string> = ref(location.hash.slice(1))
@@ -187,6 +195,9 @@ const handleLogout = (key: string) => {
           display: flex;
           justify-content: center;
           align-items: center;
+          span{
+            margin-right: 5px;
+          }
         }
       }
     }

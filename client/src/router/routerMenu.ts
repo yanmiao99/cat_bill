@@ -4,7 +4,8 @@ export const routerMenu = [
     path: '/home',
     icon: 'HomeFilled',
     meta: {
-      title: '首页'
+      title: '首页',
+      requireAuth: true,
     },
     component: () => import('../views/home.vue'),
   },
@@ -13,7 +14,8 @@ export const routerMenu = [
     path: '/lend',
     icon: 'RemoveFilled',
     meta: {
-      title: '借出'
+      title: '借出',
+      requireAuth: true,
     },
     component: () => import('../views/lend.vue'),
   },
@@ -22,7 +24,8 @@ export const routerMenu = [
     path: '/income',
     icon: 'CirclePlusFilled',
     meta: {
-      title: '收入'
+      title: '收入',
+      requireAuth: true,
     },
     component: () => import('../views/income.vue'),
   },
@@ -31,7 +34,8 @@ export const routerMenu = [
     path: '/report',
     icon: 'TrendCharts',
     meta: {
-      title: '报告'
+      title: '报告',
+      requireAuth: true,
     },
     component: () => import('../views/report.vue'),
   },
@@ -40,7 +44,8 @@ export const routerMenu = [
     path: '/settings',
     icon: 'Tools',
     meta: {
-      title: '设置'
+      title: '设置',
+      requireAuth: true,
     },
     component: () => import('../views/settings.vue'),
   },

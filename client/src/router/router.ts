@@ -1,6 +1,8 @@
 import {createRouter, createWebHashHistory, RouteRecordRaw} from "vue-router";
 import {routerMenu} from "./routerMenu";
 import config from "../config/config";
+import storage from "../utils/storage";
+
 /*
 * createRouter 路由器
 * createWebHashHistory  Hash
@@ -17,7 +19,8 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     redirect: '/home', // 必须使用 path 或者 name
     meta: {
-      title: '首页'
+      title: '首页',
+      requireAuth: false,
     },
     component: () => import('../layout/layout.vue'),
     children: [...routerMenu]
@@ -26,7 +29,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'login',
     path: '/login',
     meta: {
-      title: '登陆'
+      title: '登录',
+      requireAuth: false,
     },
     component: () => import('../views/login.vue'),
   },
@@ -34,7 +38,8 @@ const routes: Array<RouteRecordRaw> = [
     path: '/:catchAll(.*)',  // 导出必须使用 catchAll 正则匹配
     name: '/404',
     meta: {
-      title: '页面找不到'
+      title: '页面找不到',
+      requireAuth: false,
     },
     component: () => import('../components/404.vue')
   }
@@ -49,8 +54,17 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // 动态设置浏览器标题
   document.title = to.meta.title as string + ' - ' + config.globalName
-  next()
+
+  const hasUserInfo = storage.getItem('userInfo')
+  const hasToken = hasUserInfo?.token
+  // 路由拦截
+  if (to.meta.requireAuth && !hasToken) {
+    next({name: 'login'})
+  } else {
+    next()
+  }
 })
+
 
 export default router
 

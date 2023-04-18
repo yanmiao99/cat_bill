@@ -94,7 +94,7 @@ router.post('/login', async (req, res) => {
   }
 
   // 生成 token 并返回给客户端
-  const payload = {userId: user.id};
+  const payload = {userId: user.id + 123123}
   const options = {expiresIn: TOKEN_EXPIRES_IN}; // token 失效时间
   jwt.sign(payload, SALT, options, (err, token) => {
     if (err) throw err;
@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
       code: 200,
       msg: "登录成功",
       data: {
-        token: 'Bearer ' + token,
+        token,
         userId: user.id,
         username: user.username,
       }
