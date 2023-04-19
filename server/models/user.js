@@ -1,11 +1,14 @@
-const {
-  Model
-} = require('sequelize');
+const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
   }
 
   User.init({
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,          // 是否是主键
+      autoIncrement: true,       // 是否自增
+    },
     username: DataTypes.STRING,
     password: DataTypes.STRING,
     status: {

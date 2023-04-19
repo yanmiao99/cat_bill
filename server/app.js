@@ -18,6 +18,12 @@ app.use(cors()) // 解决跨域
 // 路由
 app.get('/', (req, res) => res.send('Hello World!'))
 app.use('/api/user', require('./routes/user.js'))
+// 统一身份验证 (需要token登录的接口)
+app.use(
+  '/api/lend',
+  passport.authenticate('jwt', {session: false}),
+  require('./routes/lend.js'
+  ));
 
 // 异常捕获的中间件 ( 需要放在所有路由的最后面 )
 app.use((err, req, res, next) => {

@@ -40,7 +40,7 @@
           <!-- 下拉菜单 -->
           <el-dropdown trigger="click" @command="handleLogout">
             <div class="user-info-tools">
-              <span>{{username}}</span>
+              <span>{{ username }}</span>
               <el-icon>
                 <Tools/>
               </el-icon>
@@ -102,6 +102,7 @@ const handleIsCollapse = () => {
 
 // 退出登录
 const handleLogout = (key: string) => {
+  storage.clearItem('userInfo')
   router.push('/login')
 }
 
@@ -195,7 +196,8 @@ const handleLogout = (key: string) => {
           display: flex;
           justify-content: center;
           align-items: center;
-          span{
+
+          span {
             margin-right: 5px;
           }
         }

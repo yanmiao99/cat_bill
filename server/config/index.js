@@ -5,7 +5,7 @@ const SALT = 'coder_yanmiao'
 const PORT = 3000
 
 // token过期时间
-const TOKEN_EXPIRES_IN = 3600
+const TOKEN_EXPIRES_IN = 3600 * 24 * 7
 
 module.exports = {
   SALT,

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const models = require('../models')
+const {User} = require('../models')
 const log4js = require('../utils/log4j.js')
 const md5 = require("md5");
 const jwt = require('jsonwebtoken');
@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
     return
   }
   // 判断用户是否已存在
-  const user = await models.User.findOne({
+  const user = await User.findOne({
     where: {
       username
     }
@@ -40,21 +40,28 @@ router.post('/register', async (req, res) => {
     return
   }
   // 创建一个新的用户
-  const cryptoPassword = md5(password + SALT);
-  await models.User.create({
-    username,
-    password: cryptoPassword,
-  })
-
-  log4js.info('注册成功')
-
-  res.send({
-    code: 200,
-    msg: "注册成功",
-    data: {
+  try {
+    const cryptoPassword = md5(password + SALT);
+    await User.create({
       username,
-    }
-  })
+      password: cryptoPassword,
+    })
+    log4js.info('注册成功')
+    res.send({
+      code: 200,
+      msg: "注册成功",
+      data: {
+        username,
+      }
+    })
+  } catch (err) {
+    log4js.error(err)
+    res.send({
+      code: 400,
+      msg: '添加失败',
+      data: err
+    })
+  }
 })
 
 /**
@@ -73,7 +80,7 @@ router.post('/login', async (req, res) => {
   }
 
   // 查询用户是否存在
-  const user = await models.User.findOne({
+  const user = await User.findOne({
     where: {
       username
     }

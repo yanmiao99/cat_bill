@@ -1,6 +1,6 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const models = require('../models')
+const {User} = require('../models')
 const {SALT} = require("../config/index.js");
 const log4js = require('../utils/log4j.js')
 
@@ -12,7 +12,7 @@ opts.secretOrKey = SALT
 module.exports = passport => {
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
     // console.log(jwt_payload);
-    models.User.findOne({
+    User.findOne({
       where: {
         id: jwt_payload.userId - 123123
       }
