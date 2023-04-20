@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   class Lend extends Model {
     // 定义类方法 (多表联查)
     static associate(models) {
-      Lend.belongsTo(models.User, {foreignKey: 'uId'})
+      Lend.belongsTo(models.LendPeople);
     }
   }
 
@@ -15,10 +15,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     // 日期
     date: DataTypes.DATE, // 时间格式是ISO 8601格式的时间字符串
-    // 借款人
-    borrower: DataTypes.STRING,
     // 金额
-    amount: DataTypes.DOUBLE,
+    amount: {
+      type:DataTypes.DOUBLE,
+      defaultValue: 0
+    },
     // 原因
     reason: DataTypes.STRING,
     // 还款日期
@@ -45,15 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     isDelete: {
       type: DataTypes.INTEGER,
       defaultValue: 0 // 0 在用 1 删除
-    },
-    uId: {  // 外键 , 用于关联用户
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      // references: { // 外键引用, 用于关联用户
-      //   model: models.User,
-      //   key: 'id'
-      // }
-    },
+    }
   }, {
     sequelize,
     modelName: 'Lend',

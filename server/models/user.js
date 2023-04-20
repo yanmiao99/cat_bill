@@ -1,6 +1,10 @@
 const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
+    // 定义类方法 (一对多关系)
+    static associate(models) {
+      User.hasMany(models.LendPeople);
+    }
   }
 
   User.init({

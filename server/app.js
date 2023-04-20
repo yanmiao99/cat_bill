@@ -20,6 +20,11 @@ app.get('/', (req, res) => res.send('Hello World!'))
 app.use('/api/user', require('./routes/user.js'))
 // 统一身份验证 (需要token登录的接口)
 app.use(
+  '/api/lendPeople',
+  passport.authenticate('jwt', {session: false}),
+  require('./routes/lendPeople.js'
+  ));
+app.use(
   '/api/lend',
   passport.authenticate('jwt', {session: false}),
   require('./routes/lend.js'
