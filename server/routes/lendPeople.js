@@ -70,17 +70,16 @@ router.get('/list', async (req, res) => {
         UserId: currentUserId,
         isDelete: 0
       },
-      include: [{
+      include: {
         model: Lend,
         attributes: ["id",'amount'],
-        where: { isDelete: 0 }
-      }],
+        // where: { isDelete: 0 }
+      },
       attributes: { // 设置排除的字段
         exclude: ['isDelete', 'UserId', 'createdAt', 'updatedAt']
       },
       offset,
       limit,
-      nest: true
     })
     const totalCount = await LendPeople.count({
       where: {
@@ -89,33 +88,38 @@ router.get('/list', async (req, res) => {
       }
     })
 
+
     // 计算totalAmount
-    for (const item of lendPeopleList) {
-      item.totalAmount = 0
-      if (item.Lends && item.Lends.length === 0) {
-        continue;
-      }
-
-      item.Lends.forEach(lend => {
-        item.totalAmount += lend.amount
-      })
-
-      await LendPeople.update(
-        {totalAmount: item.totalAmount},
-        {
-          where: {
-            id: item.id
-          }
-        })
-    }
-
+    // for (const item of lendPeopleList) {
+    //   item.totalAmount = 0
+    //   if (item.Lends && item.Lends.length === 0) {
+    //     continue;
+    //   }
+    //
+    //   item.Lends.forEach(lend => {
+    //     item.totalAmount += lend.amount
+    //   })
+    //
+    //   await LendPeople.update(
+    //     {totalAmount: item.totalAmount},
+    //     {
+    //       where: {
+    //         id: item.id
+    //       }
+    //     })
+    // }
     const totalPages = Math.ceil(totalCount / limit)
     log4js.info(`查询用户id为 ${currentUserId} 的借出记录成功`)
     res.send({
       code: 200,
       msg: '查询成功',
       data: {
-        list: lendPeopleList,
+        list:  lendPeopleList.map((item) => {
+          return {
+            ...item.dataValues,
+            family: []
+          }
+        }),
         pagination: {
           page, // 当前页数，即请求中传入的page参数。
           limit, // 每页返回的数据量，即请求中传入的limit参数。

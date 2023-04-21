@@ -42,7 +42,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0 // 0 未结清 1 已结清
     },
     // 备注
-    remark: DataTypes.STRING,
+    remark: {
+      type:DataTypes.STRING,
+      defaultValue: '--'
+    },
+
     isDelete: {
       type: DataTypes.INTEGER,
       defaultValue: 0 // 0 在用 1 删除
