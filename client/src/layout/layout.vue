@@ -121,6 +121,7 @@ const handleLogout = (key: string) => {
     transition: width 0.3s;
     color: #fff;
     border-right: 1px solid #ddd;
+    z-index: 99;
 
     .logo {
       padding: 20px;
@@ -205,8 +206,10 @@ const handleLogout = (key: string) => {
     }
 
     .wrapper {
-      height: calc(100vh - 50px);
-      background: #ECEEF1;
+      position: relative;
+      min-height:calc(100vh - 50px);
+      height: calc(100% - 50px);
+      background: #F4F6FA;
       padding: 20px;
       box-sizing: border-box;
     }
