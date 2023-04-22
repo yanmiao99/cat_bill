@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const {LendPeople, Lend, User} = require('../models')
 const log4js = require('../utils/log4j.js')
+const {Op} = require("sequelize");
 
 /**
  * @api {post} /lendPeople/add 添加一条借出记录
@@ -72,7 +73,7 @@ router.get('/list', async (req, res) => {
       },
       include: {
         model: Lend,
-        attributes: ["id",'amount'],
+        attributes: ["id", 'amount'],
         // where: { isDelete: 0 }
       },
       attributes: { // 设置排除的字段
@@ -88,43 +89,35 @@ router.get('/list', async (req, res) => {
       }
     })
 
-
     // 计算totalAmount
-    // for (const item of lendPeopleList) {
-    //   item.totalAmount = 0
-    //   if (item.Lends && item.Lends.length === 0) {
-    //     continue;
-    //   }
-    //
-    //   item.Lends.forEach(lend => {
-    //     item.totalAmount += lend.amount
-    //   })
-    //
-    //   await LendPeople.update(
-    //     {totalAmount: item.totalAmount},
-    //     {
-    //       where: {
-    //         id: item.id
-    //       }
-    //     })
-    // }
-    const totalPages = Math.ceil(totalCount / limit)
+    for (const item of lendPeopleList) {
+      item.totalAmount = 0
+      if (item.Lends && item.Lends.length === 0) {
+        continue;
+      }
+
+      item.Lends.forEach(lend => {
+        item.totalAmount += lend.amount
+      })
+
+      await LendPeople.update(
+        {totalAmount: item.totalAmount},
+        {
+          where: {
+            id: item.id
+          }
+        })
+    }
     log4js.info(`查询用户id为 ${currentUserId} 的借出记录成功`)
     res.send({
       code: 200,
       msg: '查询成功',
       data: {
-        list:  lendPeopleList.map((item) => {
-          return {
-            ...item.dataValues,
-            family: []
-          }
-        }),
+        list: lendPeopleList,
         pagination: {
           page, // 当前页数，即请求中传入的page参数。
           limit, // 每页返回的数据量，即请求中传入的limit参数。
           totalCount, // 满足查询条件的总数据量，也就是不考虑分页时查询结果的总数。
-          totalPages // 根据limit和totalCount计算出来的总页数。
         }
       }
     })
@@ -269,6 +262,7 @@ router.get("/search", async (req, res) => {
       msg: message,
       data: null
     })
+    return
   }
 
   try {
@@ -277,7 +271,10 @@ router.get("/search", async (req, res) => {
       // 查询条件需要查询isDelete为0的数据
       where: {
         UserId: currentUserId,
-        borrower,
+        borrower: {
+          // 模糊搜索
+          [Op.like]: `%${borrower}%`
+        },
         isDelete: 0
       },
       attributes: { // 设置排除的字段
@@ -288,12 +285,13 @@ router.get("/search", async (req, res) => {
     })
     const totalCount = await LendPeople.count({
       where: {
-        borrower,
+        borrower: {
+          [Op.like]: `%${borrower}%`
+        },
         UserId: currentUserId,
         isDelete: 0
       }
     })
-    const totalPages = Math.ceil(totalCount / limit)
     log4js.info(`查询借款人为 ${borrower} 的借出记录成功`)
     res.send({
       code: 200,
@@ -304,7 +302,6 @@ router.get("/search", async (req, res) => {
           page, // 当前页数，即请求中传入的page参数。
           limit, // 每页返回的数据量，即请求中传入的limit参数。
           totalCount, // 满足查询条件的总数据量，也就是不考虑分页时查询结果的总数。
-          totalPages // 根据limit和totalCount计算出来的总页数。
         }
       }
     })
