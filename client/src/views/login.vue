@@ -180,7 +180,7 @@ const handleForgotPassword = () => {
           align-items: center;
 
           & > span {
-            color: #5A9CF8;
+            color: var(--el-color-primary);
             cursor: pointer;
           }
 

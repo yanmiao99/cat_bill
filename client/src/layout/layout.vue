@@ -7,7 +7,6 @@
       </div>
       <el-menu
           class="el-menu-vertical"
-          active-text-color="#ffca39"
           background-color="#fff"
           text-color="#333"
           :collapse="isCollapse"
@@ -139,7 +138,7 @@ const handleLogout = (key: string) => {
         margin-left: 10px;
         width: 70px;
         line-height: 1.7em;
-        color: #ffca39;
+        color: var(--el-color-primary);
       }
     }
 

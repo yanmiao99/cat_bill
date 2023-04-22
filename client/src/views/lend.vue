@@ -30,8 +30,8 @@
       <el-table-column align="center" label="操作">
         <template #default="scope">
           <el-button-group>
-            <el-button plain type="warning" :icon="Edit" @click="handleLendPeopleAddOrEdit('edit',scope.row)"/>
-            <el-button plain type="success" :icon="View" @click="handleLendPeopleView(scope.row)"/>
+            <el-button plain type="success" :icon="Edit" @click="handleLendPeopleAddOrEdit('edit',scope.row)"/>
+            <el-button plain :icon="View" @click="handleLendPeopleView(scope.row)"/>
             <el-popconfirm title="你确定删除该条数据吗?" @confirm="handleLendPeopleDelete(scope.row)">
               <template #reference>
                 <el-button plain type="danger" :icon="Delete"/>

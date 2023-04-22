@@ -6,7 +6,7 @@
       size="80%">
     <template #header>
       <span>{{ title }}</span>
-      <el-button type="primary" @click="handleLendAddAndEdit('add',{})">新增</el-button>
+      <el-button color="#626aef" type="primary" @click="handleLendAddAndEdit('add',{})">新增</el-button>
     </template>
     <el-table
         :data="lendData"
@@ -52,7 +52,12 @@
           <el-tag v-else type="warning">{{ scope.row.settle }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="备注" :show-overflow-tooltip="true" prop="remark"/>
+      <el-table-column align="center" label="备注" :show-overflow-tooltip="true" prop="remark">
+        <template #default="scope">
+          <p v-if="scope.row.remark">{{ scope.row.remark }}</p>
+          <p v-else> -- </p>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="130">
         <template #default="scope">
           <el-button-group>
@@ -109,18 +114,41 @@
             placeholder="请输入利息" controls-position="right" :value-on-clear="0"/>
       </el-form-item>
       <el-form-item label="凭证" prop="voucher">
-        <!--<el-upload-->
-        <!--    class="voucher-uploader"-->
-        <!--    action=""-->
-        <!--    :show-file-list="false"-->
-        <!--    :on-success="handleLendFormUploadSuccess"-->
-        <!--    :before-upload="handleLendFormBeforeUpload">-->
-        <!--  <img v-if="lendFormDialogData.voucher" :src="lendFormDialogData.voucher" class="voucher" alt="">-->
-        <!--  <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-        <!--</el-upload>-->
-
-        <el-input
-            v-model="lendFormDialogData.voucher" clearable placeholder="请输入凭证"/>
+        <el-upload
+            action=""
+            :auto-upload="true"
+            :limit="1"
+            :http-request="handleUploadFile"
+            :before-upload="handleLendFormBeforeUpload"
+            v-model:file-list="lendFileList"
+            list-type="picture-card"
+            accept=".jpg,.jpeg,.png,JPG,JPEG,PNG"
+        >
+          <div class="el-upload__text" style="text-align: center">
+            <el-icon>
+              <upload-filled/>
+            </el-icon>
+            <p>上传凭证</p>
+          </div>
+          <template #file="{ file }">
+            <div>
+              <img
+                  v-if="lendFormDialogData.voucher"
+                  class="el-upload-list__item-thumbnail"
+                  :src="lendFormDialogData.voucher"
+                  alt=""/>
+              <div class="el-upload-list__item-actions">
+                <span
+                    class="el-upload-list__item-delete"
+                    @click="handleLendFormRemove(file)">
+                  <el-icon>
+                    <Delete/>
+                  </el-icon>
+                </span>
+              </div>
+            </div>
+          </template>
+        </el-upload>
       </el-form-item>
       <el-form-item label="还款方式" prop="type">
         <el-select v-model="lendFormDialogData.type" placeholder="请选择还款方式" style="width: 100%">
@@ -164,9 +192,10 @@ import {ref, watch} from "vue";
 import {addLendInfo, deleteLendInfo, editLendInfo, getLendInfo} from "../api/lend";
 import dayjs from "dayjs";
 import {formatStatistics} from "../utils";
-import {Delete, Edit} from "@element-plus/icons-vue";
+import {Delete, Edit, UploadFilled} from "@element-plus/icons-vue";
 import {ElConfigProvider, ElMessage} from 'element-plus'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import {uploadImage} from "../api/upload";
 
 const locale = ref(zhCn)
 
@@ -271,23 +300,46 @@ const lendFormDialogData = ref({
 // 弹窗表单
 const lendFormRef = ref(null)
 
-// 图片上传
-const handleLendFormBeforeUpload = (file) => {
-  const isJPG = file.type === 'image/jpeg'
-  const isLt2M = file.size / 1024 / 1024 < 2
+const lendFileList = ref([])
 
-  if (!isJPG) {
-    this.$message.error('上传头像图片只能是 JPG 格式!')
+const handleLendFormRemove = (file) => {
+  lendFileList.value = []
+  lendFormDialogData.value.voucher = ''
+  let card = document.querySelector('.el-upload--picture-card')
+  if (lendFileList.value.length === 0) {
+    card.style.display = 'inline-flex'
   }
-  if (!isLt2M) {
-    this.$message.error('上传头像图片大小不能超过 2MB!')
-  }
-  return isJPG && isLt2M
 }
 
-// 图片上传成功
-const handleLendFormUploadSuccess = (res, file) => {
-  // lendFormDialogData.value.voucher = URL.createObjectURL(file.raw)
+// 图片上传处理钩子
+const handleLendFormBeforeUpload = (file) => {
+  const isPng = /image\/png/.test(file.type);
+  const isJpg = /image\/jpeg|image\/jpg/.test(file.type);
+  const isLt2M = file.size / 1024 / 1024 < 2;
+
+  if (!isPng && !isJpg) {
+    ElMessage.error('只能上传 PNG 或 JPG 格式的图片！');
+  }
+
+  if (!isLt2M) {
+    ElMessage.error('上传图片大小不能超过 2MB！');
+  }
+
+  return (isPng || isJpg) && isLt2M;
+}
+
+
+// 图片上传
+const handleUploadFile = async (file) => {
+  const formData = new FormData()
+  formData.append('file', file.file)
+  let res = await uploadImage(formData)
+  lendFormDialogData.value.voucher = res.url
+
+  let card = document.querySelector('.el-upload--picture-card')
+  if (lendFileList.value.length > 0) {
+    card.style.display = 'none'
+  }
 }
 
 const submitDisabled = ref(false)
@@ -424,7 +476,7 @@ watch(
 
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .image-slot {
   display: flex;
   justify-content: center;
@@ -434,4 +486,5 @@ watch(
   font-size: 12px;
   margin-top: 10px;
 }
+
 </style>
