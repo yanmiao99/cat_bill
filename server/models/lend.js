@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     date: DataTypes.DATE, // 时间格式是ISO 8601格式的时间字符串
     // 金额
     amount: {
-      type:DataTypes.DOUBLE,
+      type: DataTypes.DOUBLE,
       defaultValue: 0,
     },
     // 原因
@@ -43,10 +43,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     // 备注
     remark: {
-      type:DataTypes.STRING,
-      defaultValue: '--'
+      type: DataTypes.STRING,
     },
-
     isDelete: {
       type: DataTypes.INTEGER,
       defaultValue: 0 // 0 在用 1 删除

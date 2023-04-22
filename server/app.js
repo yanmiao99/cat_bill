@@ -5,6 +5,7 @@ const cors = require('cors')
 const log4js = require('./utils/log4j.js')
 const {PORT} = require("./config/index.js")
 const passport = require('passport');
+const {resolve} = require("path");
 
 // passport 初始化 (用于验证token)
 app.use(passport.initialize());
@@ -15,6 +16,9 @@ app.use(express.json()) // 解析 json 数据
 app.use(express.urlencoded({extended: false})) // 解析 x-www-form-urlencoded 数据
 app.use(cors()) // 解决跨域
 
+// 静态资源
+app.use('/public', express.static(resolve(__dirname, 'public')))  // 静态资源
+
 // 路由
 app.get('/', (req, res) => res.send('Hello World!'))
 app.use('/api/user', require('./routes/user.js'))
@@ -22,13 +26,16 @@ app.use('/api/user', require('./routes/user.js'))
 app.use(
   '/api/lendPeople',
   passport.authenticate('jwt', {session: false}),
-  require('./routes/lendPeople.js'
-  ));
+  require('./routes/lendPeople.js'));
 app.use(
   '/api/lend',
   passport.authenticate('jwt', {session: false}),
-  require('./routes/lend.js'
-  ));
+  require('./routes/lend.js'));
+app.use(
+  '/api/upload',
+  passport.authenticate('jwt', {session: false}),
+  require('./routes/upload.js'));
+
 
 // 异常捕获的中间件 ( 需要放在所有路由的最后面 )
 app.use((err, req, res, next) => {
