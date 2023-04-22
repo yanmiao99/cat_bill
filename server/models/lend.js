@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     // 金额
     amount: {
       type:DataTypes.DOUBLE,
-      defaultValue: 0
+      defaultValue: 0,
     },
     // 原因
     reason: DataTypes.STRING,

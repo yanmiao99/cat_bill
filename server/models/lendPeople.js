@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     borrower: DataTypes.STRING,
     // 总金额
     totalAmount: {
-      type:DataTypes.DOUBLE,
-      defaultValue: 0
+      type: DataTypes.DOUBLE,
+      defaultValue: 0,
     },
     isDelete: {
       type: DataTypes.INTEGER,

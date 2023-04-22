@@ -6,6 +6,16 @@ export const formatStatistics = (param) => {
       sums[index] = '总计'
       return
     }
+
+    if (
+      column.property === 'id'
+      || column.property === 'remark'
+      || column.property === 'reason'
+      || column.property === 'voucher'
+    ) {
+      return
+    }
+
     const values = data.map((item) => Number(item[column.property]))
     if (!values.every((value) => Number.isNaN(value))) {
       sums[index] = `¥ ${values.reduce((prev, curr) => {

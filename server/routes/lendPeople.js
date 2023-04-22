@@ -74,7 +74,8 @@ router.get('/list', async (req, res) => {
       include: {
         model: Lend,
         attributes: ["id", 'amount'],
-        // where: { isDelete: 0 }
+        where: {isDelete: 0, settle: 0},
+        required: false // 添加 required: false 选项，表示即使没有关联数据，也不要把这条数据排除在外
       },
       attributes: { // 设置排除的字段
         exclude: ['isDelete', 'UserId', 'createdAt', 'updatedAt']
@@ -104,10 +105,12 @@ router.get('/list', async (req, res) => {
         {totalAmount: item.totalAmount},
         {
           where: {
+            UserId: currentUserId,
             id: item.id
           }
         })
     }
+
     log4js.info(`查询用户id为 ${currentUserId} 的借出记录成功`)
     res.send({
       code: 200,

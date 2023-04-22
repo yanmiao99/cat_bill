@@ -16,3 +16,30 @@ export const getLendInfo = (param?: ILendInfoParam) => {
   })
 }
 
+// 新增数据
+export const addLendInfo = (param: ILendInfoParam) => {
+  return request({
+    method: 'post',
+    url: '/lend/add',
+    data: param
+  })
+}
+
+// 修改数据
+export const editLendInfo = (param: ILendInfoParam) => {
+  return request({
+    method: 'post',
+    url: '/lend/update',
+    data: param
+  })
+}
+
+// 删除数据
+export const deleteLendInfo = (param: ILendInfoParam) => {
+  return request({
+    method: 'post',
+    url: '/lend/delete',
+    data: param
+  })
+}
+

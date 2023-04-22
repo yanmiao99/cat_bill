@@ -24,7 +24,7 @@
         empty-text="暂无数据"
         show-summary
         sum-text="合计">
-      <el-table-column align="center" label="序号" type="index" width="70"/>
+      <el-table-column align="center" label="ID" prop="id" sortable width="70"/>
       <el-table-column align="center" label="姓名" prop="borrower" sortable/>
       <el-table-column align="center" label="总金额(¥)" prop="totalAmount" sortable/>
       <el-table-column align="center" label="操作">
@@ -68,7 +68,7 @@
       </span>
       </template>
     </el-dialog>
-    <land-drawer
+    <lend-drawer
         :lendPersonId="currentLendPersonId"
         v-model:visible="drawerDialogVisible"
         :title="drawerDialogTitle"
@@ -87,7 +87,7 @@ import {
 } from '../api/lendPeople'
 import {Delete, Edit, View} from "@element-plus/icons-vue";
 import {ElMessage} from 'element-plus'
-import LandDrawer from "../components/land-drawer.vue";
+import LendDrawer from "../components/lend-drawer.vue";
 import {formatStatistics} from "../utils";
 
 onMounted(() => {
