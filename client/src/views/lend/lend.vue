@@ -1,6 +1,6 @@
 <template>
   <div class="lend">
-    <div class="land_header">
+    <div class="header_operation">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
           <el-input
@@ -46,7 +46,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="land_footer">
+    <div class="footer_operation">
       <el-pagination
           background
           layout="prev, pager, next"
@@ -217,9 +217,14 @@ const handleLendPeopleDelete = async (item) => {
 watch(
     () => ({
       card_page: lendPeople_page.value.page,
+      drawer_visible: drawerDialogVisible.value
     }),
     async (newVal, oldVal) => {
       if (newVal.card_page !== oldVal.card_page) {
+        await getLendPeople()
+      }
+      // 需要在关闭弹窗的时候, 重新请求一下数据, 以保证数据是最新的
+      if (newVal.drawer_visible === false && oldVal.drawer_visible === true) {
         await getLendPeople()
       }
     }
@@ -228,44 +233,7 @@ watch(
 </script>
 
 <style scoped lang="scss">
-
 .lend {
-  .land_header {
-    background: #fff;
-    padding: 10px 20px;
-    box-sizing: border-box;
-    display: flex;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-
-    .el-form {
-      width: 100%;
-      display: flex;
-
-      .el-form-item {
-        margin-bottom: 0;
-
-        &:last-child {
-          margin-left: auto;
-          margin-right: 0;
-        }
-      }
-    }
-  }
-
-  .land_footer {
-    width: 100%;
-    background: #fff;
-    padding: 10px 20px;
-    box-sizing: border-box;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: flex-end;
-    border-top: 1px solid #ddd;
-  }
-
   // 用于解决遮罩层被表格遮挡的 bug
   :deep(.el-table .el-table__cell) {
     position: unset !important;

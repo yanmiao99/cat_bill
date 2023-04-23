@@ -1,0 +1,35 @@
+.header_operation {
+  background: #fff;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  display: flex;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+
+  .el-form {
+    width: 100%;
+    display: flex;
+
+    .el-form-item {
+      margin-bottom: 0;
+
+      &:last-child {
+        margin-left: auto;
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.footer_operation {
+  width: 100%;
+  background: #fff;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #ddd;
+}

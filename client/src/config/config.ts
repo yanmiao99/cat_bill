@@ -2,5 +2,5 @@
 
 export default {
   namespace: 'cat_', // 命名空间
-  globalName: '橘·记账', //全局名称
+  globalName: '记录本', //全局名称
 }
