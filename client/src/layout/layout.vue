@@ -55,9 +55,11 @@
         </div>
       </div>
       <div class="wrapper" v-cloak>
-        <Transition>
-          <router-view/>
-        </Transition>
+        <router-view v-slot="{ Component }">
+          <transition>
+            <component :is="Component"/>
+          </transition>
+        </router-view>
       </div>
     </div>
   </div>
@@ -83,7 +85,6 @@ onMounted(async () => {
   let storage_isCollapse = storage.getItem('isCollapse') || '0'
   if (storage_isCollapse) {
     isCollapse.value = storage_isCollapse === '1'
-  } else {
   }
 
   // 获取当前用户信息
@@ -233,12 +234,17 @@ const handleLogout = (key: string) => {
 
       .v-enter-active,
       .v-leave-active {
-        transition: opacity 0.5s ease;
+        transition: opacity 0.2s ease;
       }
 
       .v-enter-from,
       .v-leave-to {
         opacity: 0;
+      }
+
+      // 解决动画冲突的问题 , 延迟执行进入动画即可
+      .v-enter-active {
+        transition-delay: 0.2s;
       }
     }
   }

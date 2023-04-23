@@ -192,7 +192,7 @@
 </template>
 
 <script setup>
-import {ref, watch} from "vue";
+import {nextTick, ref, watch} from "vue";
 import {addLendInfo, deleteLendInfo, editLendInfo, getLendInfo} from "@/api/lend";
 import dayjs from "dayjs";
 import {formatStatistics} from "@/utils";
@@ -306,9 +306,11 @@ const lendFormRef = ref(null)
 
 const lendFileList = ref([])
 
-const setFileListShow = (show)=>{
-  let card = document.querySelector('.el-upload--picture-card')
-  card.style.display = show ? 'inline-flex' : 'none'
+const setFileListShow = (show) => {
+  nextTick(() => {
+    let card = document.querySelector('.el-upload--picture-card')
+    card.style.display = show ? 'inline-flex' : 'none'
+  })
 }
 
 const handleLendFormRemove = (file) => {
@@ -363,9 +365,17 @@ const handleLendAddAndEdit = (type, item) => {
     lendFormDialogData.value = {
       ...item,
       date: formatDate,
-      repaymentDate: formatRepaymentDate
+      repaymentDate: formatRepaymentDate,
+      type: item.type === '一次性还' ? 1 : 0,
+      settle: item.settle === '已结清' ? 1 : 0
     }
+    console.log(lendFormDialogData.value);
     lendFormDialogDate.value = [formatDate, formatRepaymentDate]
+    lendFileList.value = [{
+      name: '编辑回显的图片',
+      url: item.voucher
+    }]
+    setFileListShow(false)
   }
   lendType.value = type
   lendClickItem.value = item
@@ -388,10 +398,7 @@ const handleLendFormDialogSubmit = async (formEl) => {
         await addLendInfo(params)
         ElMessage.success('数据提交成功')
       } else {
-        // console.log(params);
         params.id = lendClickItem.value.id
-        params.type = lendFormDialogData.value.type === '一次性还' ? 1 : 0
-        params.settle = lendFormDialogData.value.settle === '已结清' ? 1 : 0
         await editLendInfo(params)
         ElMessage.success('数据修改成功')
       }
