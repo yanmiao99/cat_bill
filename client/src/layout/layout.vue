@@ -54,8 +54,10 @@
           </el-dropdown>
         </div>
       </div>
-      <div class="wrapper">
-        <router-view></router-view>
+      <div class="wrapper" v-cloak>
+        <Transition>
+          <router-view/>
+        </Transition>
       </div>
     </div>
   </div>
@@ -224,11 +226,21 @@ const handleLogout = (key: string) => {
       background: #F4F6FA;
       padding: 20px;
       box-sizing: border-box;
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .v-enter-active,
+      .v-leave-active {
+        transition: opacity 0.5s ease;
+      }
+
+      .v-enter-from,
+      .v-leave-to {
+        opacity: 0;
+      }
     }
   }
-}
-
-[v-cloak] {
-  display: none;
 }
 </style>
