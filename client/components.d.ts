@@ -43,6 +43,7 @@ declare module '@vue/runtime-core' {
     ElUpload: typeof import('element-plus/es')['ElUpload']
     LandDrawer: typeof import('./src/components/land-drawer.vue')['default']
     LendDrawer: typeof import('./src/components/lend-drawer.vue')['default']
+    Loading: typeof import('./src/components/loading/loading.vue')['default']
     MenuTree: typeof import('./src/components/MenuTree.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

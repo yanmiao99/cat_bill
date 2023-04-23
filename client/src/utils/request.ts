@@ -6,6 +6,9 @@ import {ElMessage} from "element-plus"
 import router from "../router/router"
 import storage from "../utils/storage"
 
+// @ts-ignore
+import {load} from '../components/loading/loading'
+
 // 无效token
 const TOKEN_INVALID = 'Token认证失败, 请重新登陆'
 // 请求异常
@@ -27,20 +30,32 @@ service.interceptors.request.use((req) => {
     token = ''
   }
   if (!headers.Authorization) headers.Authorization = 'Bearer ' + token
-  return req
+
+  // 开启 loading 定时器，1000ms 后再显示 loading , 并且 将定时器存储到请求参数中
+  // @ts-ignore
+  req.timer = setTimeout(() => {
+    load.show()
+  }, 1000)
+
+  return req;
 })
 
 // 响应拦截
 service.interceptors.response.use(
   (res) => {
+    // @ts-ignore
+    clearTimeout(res.config.timer) // 取消定时器
     const {code, data, msg} = res.data
     if (code === 200) {
+      load.hide() // 隐藏 loading
       return data // 返回数据正确
     } else {
       ElMessage.error(msg || NETWORK_ERROR) // 常规报错
       return Promise.reject(msg || NETWORK_ERROR)
     }
   }, (error) => {
+    clearTimeout(error.config.timer) // 取消定时器
+    load.hide()
     if (error.response && error.response.status === 401) {
       // token 失效，跳转到登录页
       storage.clearItem('userInfo'); // 移除 token

@@ -2,6 +2,8 @@ import {createRouter, createWebHashHistory, RouteRecordRaw} from "vue-router";
 import {routerMenu} from "./routerMenu";
 import config from "../config/config";
 import storage from "../utils/storage";
+import login from "../views/login/login.vue";
+import layout from "../layout/layout.vue";
 
 /*
 * createRouter 路由器
@@ -10,6 +12,7 @@ import storage from "../utils/storage";
 *
 * 注意点 :
 * 如果你的 router 和文件的名称的大小写不一致 ,会导致热更新失效 (大小写敏感)
+* 动态懒加载, 会造成页面白屏时间更加的长, 所以如果能够提前加载, 就提前加载
 * */
 
 // 页面路由
@@ -22,7 +25,8 @@ const routes: Array<RouteRecordRaw> = [
       title: '首页',
       requireAuth: false,
     },
-    component: () => import('../layout/layout.vue'),
+    // component: () => import('../layout/layout.vue'),
+    component: layout,
     children: [...routerMenu]
   },
   {
@@ -32,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
       title: '登录',
       requireAuth: false,
     },
-    component: () => import('../views/login/login.vue'),
+    component: login,
   },
   {
     path: '/:catchAll(.*)',  // 导出必须使用 catchAll 正则匹配

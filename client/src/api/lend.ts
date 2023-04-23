@@ -21,7 +21,7 @@ export const addLendInfo = (param: ILendInfoParam) => {
   return request({
     method: 'post',
     url: '/lend/add',
-    data: param
+    data: param,
   })
 }
 
