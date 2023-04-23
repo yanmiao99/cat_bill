@@ -6,7 +6,7 @@
       size="80%">
     <template #header>
       <span>{{ title }}</span>
-      <el-button color="#626aef" type="primary" @click="handleLendAddAndEdit('add',{})">新增</el-button>
+      <el-button type="primary" @click="handleLendAddAndEdit('add',{})">新增</el-button>
     </template>
     <el-table
         :data="lendData"
@@ -302,12 +302,16 @@ const lendFormRef = ref(null)
 
 const lendFileList = ref([])
 
+const setFileListShow = (show)=>{
+  let card = document.querySelector('.el-upload--picture-card')
+  card.style.display = show ? 'inline-flex' : 'none'
+}
+
 const handleLendFormRemove = (file) => {
   lendFileList.value = []
   lendFormDialogData.value.voucher = ''
-  let card = document.querySelector('.el-upload--picture-card')
   if (lendFileList.value.length === 0) {
-    card.style.display = 'inline-flex'
+    setFileListShow(true)
   }
 }
 
@@ -336,9 +340,8 @@ const handleUploadFile = async (file) => {
   let res = await uploadImage(formData)
   lendFormDialogData.value.voucher = res.url
 
-  let card = document.querySelector('.el-upload--picture-card')
   if (lendFileList.value.length > 0) {
-    card.style.display = 'none'
+    setFileListShow(false)
   }
 }
 
@@ -390,6 +393,7 @@ const handleLendFormDialogSubmit = async (formEl) => {
       }
       await getLendData(props.lendPersonId)
       lendFormDialogVisible.value = false
+      handleLendFormResize(formEl)
     } else {
       console.log(fields);
       ElMessage.error('请检查表单数据')
@@ -412,6 +416,8 @@ const handleLendDelete = async (item) => {
 const handleLendFormResize = (formEl) => {
   if (!formEl) return
   lendFormDialogDate.value = []
+  lendFileList.value = []
+  setFileListShow(true)
   lendFormDialogData.value = {
     LendPersonId: null,
     date: '',

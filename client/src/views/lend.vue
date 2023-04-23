@@ -56,8 +56,11 @@
       <el-form :model="lendPeopleForm">
         <el-form-item label="借款人名称" :label-width="100">
           <el-input v-model="lendPeopleForm.borrower"
+                    v-auto-focus
                     placeholder="请输入借款人名称"
-                    autocomplete="off"/>
+                    autocomplete="off"
+                    @keyup.enter.native="dialogLendPeopleFormSubmit"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -93,6 +96,15 @@ import {formatStatistics} from "../utils";
 onMounted(() => {
   getLendPeople()
 })
+
+// 在模板中启用 v-auto-focus
+const vAutoFocus = {
+  updated: (el) => {
+    setTimeout(() => {
+      el.querySelector('input').focus()
+    }, 0)
+  },
+}
 
 // 借款人信息
 const lendPeopleData = ref([]);
@@ -215,10 +227,22 @@ watch(
     box-sizing: border-box;
     display: flex;
     margin-bottom: 10px;
+    border: 1px solid #ddd;
 
-    .el-form-item {
-      margin-bottom: 0;
+    .el-form {
+      width: 100%;
+      display: flex;
+
+      .el-form-item {
+        margin-bottom: 0;
+
+        &:last-child {
+          margin-left: auto;
+        }
+      }
     }
+
+
   }
 
   .land_footer {

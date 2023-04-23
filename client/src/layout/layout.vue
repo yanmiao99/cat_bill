@@ -13,7 +13,7 @@
           router
           :default-active="defaultActive"
       >
-        <el-menu-item :index="item.path" v-for="item in routerMenu" :key="item.name">
+        <el-menu-item v-cloak :index="item.path" v-for="item in routerMenu" :key="item.name">
           <el-icon>
             <component :is="item.icon"/>
           </el-icon>
@@ -74,27 +74,32 @@ const router = useRouter()
 let isCollapse: Ref<boolean> = ref(false)
 
 const username = ref('')
-
 onMounted(async () => {
   // isCollapse本地获取
+
+  // 0 是展开 , 1是收缩
   let storage_isCollapse = storage.getItem('isCollapse') || '0'
   if (storage_isCollapse) {
     isCollapse.value = storage_isCollapse === '1'
+  } else {
   }
 
   // 获取当前用户信息
   let currentUserInfo = await getCurrentUserInfo()
   username.value = currentUserInfo.username
-
 })
 
 
 // 获取当前路由
 let defaultActive: Ref<string> = ref(location.hash.slice(1))
 
+const isTransition = ref('none')
 // 菜单收缩
 const handleIsCollapse = () => {
   isCollapse.value = !isCollapse.value
+
+  isTransition.value = 'all 0.3s'
+
   // isCollapse存储本地
   storage.setItem('isCollapse', isCollapse.value ? '1' : '0')
 }
@@ -117,10 +122,12 @@ const handleLogout = (key: string) => {
     height: 100vh;
     background: #fff;
     overflow-y: auto;
-    transition: width 0.3s;
+    //transition: width 0.3s;
+    transition: v-bind(isTransition);
     color: #fff;
     border-right: 1px solid #ddd;
     z-index: 99;
+
 
     .logo {
       padding: 20px;
@@ -137,6 +144,7 @@ const handleLogout = (key: string) => {
       h1 {
         margin-left: 10px;
         width: 70px;
+        font-size: 20px;
         line-height: 1.7em;
         color: var(--el-color-primary);
       }
@@ -149,6 +157,10 @@ const handleLogout = (key: string) => {
     .el-menu-item {
       width: v-bind("isCollapse ? '100%' : '90%'");
       margin: 0 auto;
+
+      span {
+        opacity: v-bind("isCollapse ? '0' : '1'");
+      }
 
       &:hover {
         background-color: transparent;
@@ -164,7 +176,8 @@ const handleLogout = (key: string) => {
 
   .content-right {
     margin-left: v-bind("isCollapse ? '60px' : '200px'");
-    transition: margin-left 0.3s;
+    //transition: margin-left 0.3s;
+    transition: v-bind(isTransition);
 
     .nav-top {
       background: #fff;
@@ -206,7 +219,7 @@ const handleLogout = (key: string) => {
 
     .wrapper {
       position: relative;
-      min-height:calc(100vh - 50px);
+      min-height: calc(100vh - 50px);
       height: calc(100% - 50px);
       background: #F4F6FA;
       padding: 20px;
@@ -215,4 +228,7 @@ const handleLogout = (key: string) => {
   }
 }
 
+[v-cloak] {
+  display: none;
+}
 </style>
