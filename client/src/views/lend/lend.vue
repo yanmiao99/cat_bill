@@ -3,7 +3,12 @@
     <div class="land_header">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
-          <el-input v-model="searchForm.borrower" placeholder="请输入姓名"/>
+          <el-input
+              v-model="searchForm.borrower"
+              clearable
+              :prefix-icon="Search"
+              placeholder="请输入姓名">
+          </el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSearch">查询</el-button>
@@ -87,11 +92,11 @@ import {
   getSearchLendPeople,
   updateLendPeopleInfo,
   deleteLendPeopleInfo
-} from '../api/lendPeople'
-import {Delete, Edit, View} from "@element-plus/icons-vue";
+} from '@/api/lendPeople'
+import {Delete, Edit, View, Search} from "@element-plus/icons-vue";
 import {ElMessage} from 'element-plus'
-import LendDrawer from "../components/lend-drawer.vue";
-import {formatStatistics} from "../utils";
+import LendDrawer from "./lend-drawer.vue";
+import {formatStatistics} from "@/utils";
 
 onMounted(() => {
   getLendPeople()
@@ -148,6 +153,10 @@ const handleResize = () => {
 
 // 搜索借款人方法
 const handleSearch = async () => {
+  if (searchForm.value.borrower === '') {
+    ElMessage.warning('请输入借款人名称')
+    return
+  }
   let res = await getSearchLendPeople({
     borrower: searchForm.value.borrower,
     page: lendPeople_page.value.page,
@@ -238,11 +247,10 @@ watch(
 
         &:last-child {
           margin-left: auto;
+          margin-right: 0;
         }
       }
     }
-
-
   }
 
   .land_footer {
@@ -263,5 +271,4 @@ watch(
     position: unset !important;
   }
 }
-
 </style>

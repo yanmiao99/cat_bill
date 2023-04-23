@@ -32,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
       title: '登录',
       requireAuth: false,
     },
-    component: () => import('../views/login.vue'),
+    component: () => import('../views/login/login.vue'),
   },
   {
     path: '/:catchAll(.*)',  // 导出必须使用 catchAll 正则匹配

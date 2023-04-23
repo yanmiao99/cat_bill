@@ -165,11 +165,15 @@
       <el-form-item label="原因" prop="reason">
         <el-input
             type="textarea"
+            maxlength="100"
+            show-word-limit
             v-model="lendFormDialogData.reason" placeholder="请输入原因"/>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input
             type="textarea"
+            maxlength="100"
+            show-word-limit
             v-model="lendFormDialogData.remark" clearable placeholder="请输入备注"/>
       </el-form-item>
     </el-form>
@@ -189,13 +193,13 @@
 
 <script setup>
 import {ref, watch} from "vue";
-import {addLendInfo, deleteLendInfo, editLendInfo, getLendInfo} from "../api/lend";
+import {addLendInfo, deleteLendInfo, editLendInfo, getLendInfo} from "@/api/lend";
 import dayjs from "dayjs";
-import {formatStatistics} from "../utils";
+import {formatStatistics} from "@/utils";
 import {Delete, Edit, UploadFilled} from "@element-plus/icons-vue";
 import {ElConfigProvider, ElMessage} from 'element-plus'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import {uploadImage} from "../api/upload";
+import {uploadImage} from "@/api/upload";
 
 const locale = ref(zhCn)
 

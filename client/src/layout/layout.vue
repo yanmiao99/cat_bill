@@ -132,7 +132,7 @@ const handleLogout = (key: string) => {
 
 
     .logo {
-      padding: 20px;
+      padding: 6px 20px 10px 20px;
       text-align: center;
       display: flex;
       align-items: center;

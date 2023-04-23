@@ -61,11 +61,11 @@
 import {onMounted, ref, Ref} from 'vue'
 import type {FormInstance} from 'element-plus'
 import {useRouter} from "vue-router";
-import {usersStore} from "../store/user"
-import config from "../config/config"
+import {usersStore} from "../../store/user"
+import config from "../../config/config"
 import {ElMessage} from 'element-plus'
-import {postLogin} from "../api/user";
-import storage from "../utils/storage";
+import {postLogin} from "../../api/user";
+import storage from "../../utils/storage";
 
 const userFormRef = ref<FormInstance>()
 const router = useRouter()
