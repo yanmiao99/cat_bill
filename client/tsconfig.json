@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     // 统一管理ts生成的d.ts声明文件
-    // "typeRoots": ["./types"],
+    "typeRoots": [
+      "./types"
+    ],
     "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ESNext",

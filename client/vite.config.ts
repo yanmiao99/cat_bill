@@ -1,5 +1,5 @@
-import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
+import {defineConfig} from 'vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
@@ -7,6 +7,7 @@ import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 // @ts-ignore
 import path from 'path'
 
+// @ts-ignore
 export default defineConfig({
   resolve: {
     alias: {
@@ -34,9 +35,17 @@ export default defineConfig({
     vue({}),
     AutoImport({
       resolvers: [ElementPlusResolver()],
+      dts: 'types/auto-imports.d.ts',
+      imports: ['vue'],
     }),
     Components({
       resolvers: [ElementPlusResolver()],
+      // 指定扫描组件库的路径
+      dirs: ['src/components'],
+      // 自动导入组件库
+      extensions: ['vue'],
+      // 指定文件
+      dts: 'types/components.d.ts',
     }),
   ],
 })
