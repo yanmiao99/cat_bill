@@ -21,33 +21,29 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="content">
-      <el-table
-          :data="lendPeopleData"
-          stripe
-          border
-          :summary-method="formatStatistics"
-          empty-text="暂无数据"
-          show-summary
-          sum-text="合计">
-        <el-table-column align="center" label="ID" prop="id" sortable width="70"/>
-        <el-table-column align="center" label="姓名" prop="borrower" sortable/>
-        <el-table-column align="center" label="总金额(¥)" prop="totalAmount" sortable/>
-        <el-table-column align="center" label="操作">
-          <template #default="scope">
-            <el-button-group>
-              <el-button plain type="success" :icon="Edit" @click="handleLendPeopleAddOrEdit('edit',scope.row)"/>
-              <el-button plain :icon="View" @click="handleLendPeopleView(scope.row)"/>
-              <el-popconfirm title="你确定删除该条数据吗?" @confirm="handleLendPeopleDelete(scope.row)">
-                <template #reference>
-                  <el-button plain type="danger" :icon="Delete"/>
-                </template>
-              </el-popconfirm>
-            </el-button-group>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+    <el-table
+        :data="lendPeopleData"
+        stripe
+        border
+        :summary-method="formatStatistics"
+        empty-text="暂无数据"
+        show-summary
+        sum-text="合计">
+      <el-table-column align="center" label="ID" prop="id" sortable width="70"/>
+      <el-table-column align="center" label="姓名" prop="borrower" sortable/>
+      <el-table-column align="center" label="总金额(¥)" prop="totalAmount" sortable/>
+      <el-table-column align="center" label="操作">
+        <template #default="scope">
+          <el-button plain :icon="View" @click="handleLendPeopleView(scope.row)"/>
+          <el-button plain type="primary" :icon="Edit" @click="handleLendPeopleAddOrEdit('edit',scope.row)"/>
+          <el-popconfirm title="你确定删除该条数据吗?" @confirm="handleLendPeopleDelete(scope.row)">
+            <template #reference>
+              <el-button plain type="danger" :icon="Delete"/>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
     <div class="footer_operation">
       <el-pagination
           background

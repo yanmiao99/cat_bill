@@ -7,7 +7,10 @@
         </div>
         <div class="card_content">
           <p class="title">{{ item.title }}</p>
-          <p class="amount"><span>¥</span>{{ item.value }}</p>
+          <p class="amount">
+            <span>¥</span>
+            {{ item.value }}
+          </p>
         </div>
       </el-card>
     </el-col>
@@ -28,20 +31,21 @@ const cardList = ref([
   },
   {
     title: "年收入",
-    value: "12412.00",
+    value: "334122.00",
   },
   {
-    title: "工资",
+    title: "本月工资",
     value: "14114.00",
   }
 ])
+
 </script>
 
 <style scoped lang="scss">
 
 .el-card {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 
   .card_bg {
     font-size: 80px;
@@ -73,7 +77,6 @@ const cardList = ref([
       span {
         font-size: 20px;
         vertical-align: bottom;
-        margin-right: 5px;
       }
     }
   }

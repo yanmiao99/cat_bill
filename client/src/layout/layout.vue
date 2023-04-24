@@ -97,6 +97,7 @@ onMounted(async () => {
     title: '登录成功',
     message: '欢迎回来 : ' + currentUserInfo.username,
     type: 'success',
+    offset: 50,
     duration: 1500,
   })
 })
@@ -149,12 +150,11 @@ const handleLogout = (key: string) => {
       cursor: pointer;
 
       img {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
       }
 
       h1 {
-        margin-left: 10px;
         width: 70px;
         font-size: 20px;
         line-height: 1.7em;

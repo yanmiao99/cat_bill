@@ -61,14 +61,12 @@
         </el-table-column>
         <el-table-column align="center" label="操作" width="130">
           <template #default="scope">
-            <el-button-group>
               <el-button plain type="success" :icon="Edit" @click="handleDialogAddOrEdit('edit',scope.row)"/>
               <el-popconfirm title="你确定删除该条数据吗?" @confirm="handleLendDelete(scope.row)">
                 <template #reference>
                   <el-button plain type="danger" :icon="Delete"/>
                 </template>
               </el-popconfirm>
-            </el-button-group>
           </template>
         </el-table-column>
       </el-table>

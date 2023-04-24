@@ -157,8 +157,8 @@ const handleForgotPassword = () => {
       align-items: center;
 
       img {
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
       }
 
       h1 {
