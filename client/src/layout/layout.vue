@@ -138,7 +138,7 @@ const handleLogout = (key: string) => {
     transition: v-bind(isTransition);
     color: #fff;
     border-right: 1px solid #ddd;
-    z-index: 99;
+    z-index: 100;
 
 
     .logo {
@@ -192,6 +192,11 @@ const handleLogout = (key: string) => {
     transition: v-bind(isTransition);
 
     .nav-top {
+      position: fixed;
+      top: 0;
+      z-index: 99;
+      width: 100%;
+      right: 0;
       background: #fff;
       height: 50px;
       display: flex;
@@ -203,6 +208,7 @@ const handleLogout = (key: string) => {
       border-bottom: 1px solid #ddd;
 
       .bread {
+        margin-left: v-bind("isCollapse ? '60px' : '200px'");
         display: flex;
         align-items: center;
 
@@ -233,8 +239,7 @@ const handleLogout = (key: string) => {
       position: relative;
       min-height: calc(100vh - 50px);
       height: calc(100% - 50px);
-      background: #F4F6FA;
-      padding: 20px;
+      padding: 65px 20px;
       box-sizing: border-box;
 
       [v-cloak] {

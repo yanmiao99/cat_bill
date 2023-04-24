@@ -26,10 +26,11 @@
   background: #fff;
   padding: 10px 20px;
   box-sizing: border-box;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   display: flex;
   justify-content: flex-end;
   border-top: 1px solid #ddd;
+  z-index: 99;
 }

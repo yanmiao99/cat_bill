@@ -1,8 +1,11 @@
 <template>
-  <div class="income">收入</div>
+  <div class="income">
+    <income-card-list />
+  </div>
 </template>
 
-<script lang="ts">
+<script setup>
+import IncomeCardList from "@/views/income/income-card-list.vue";
 </script>
 
 <style scoped lang="scss">
