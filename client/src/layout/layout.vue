@@ -72,6 +72,7 @@ import {routerMenu} from "../router/routerMenu";
 import config from "../config/config";
 import storage from "../utils/storage";
 import {getCurrentUserInfo} from "../api/user";
+import {ElNotification} from "element-plus";
 
 const router = useRouter()
 
@@ -90,6 +91,14 @@ onMounted(async () => {
   // 获取当前用户信息
   let currentUserInfo = await getCurrentUserInfo()
   username.value = currentUserInfo.username
+
+  // 显示登录信息
+  ElNotification({
+    title: '登录成功',
+    message: '欢迎回来 : ' + currentUserInfo.username,
+    type: 'success',
+    duration: 1500,
+  })
 })
 
 

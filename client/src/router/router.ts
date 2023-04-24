@@ -2,8 +2,6 @@ import {createRouter, createWebHashHistory, RouteRecordRaw} from "vue-router";
 import {routerMenu} from "./routerMenu";
 import config from "../config/config";
 import storage from "../utils/storage";
-import login from "../views/login/login.vue";
-import layout from "../layout/layout.vue";
 
 /*
 * createRouter 路由器
@@ -25,8 +23,7 @@ const routes: Array<RouteRecordRaw> = [
       title: '首页',
       requireAuth: false,
     },
-    // component: () => import('../layout/layout.vue'),
-    component: layout,
+    component: () => import('../layout/layout.vue'),
     children: [...routerMenu]
   },
   {
@@ -36,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
       title: '登录',
       requireAuth: false,
     },
-    component: login,
+    component: () => import('../views/login/login.vue'),
   },
   {
     path: '/:catchAll(.*)',  // 导出必须使用 catchAll 正则匹配
