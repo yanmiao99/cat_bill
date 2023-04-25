@@ -43,10 +43,10 @@
       <el-table-column align="center" label="ID" prop="id" sortable width="70"/>
       <el-table-column align="center" label="日期" prop="date" sortable/>
       <el-table-column align="center" label="类型" prop="type" sortable/>
-      <el-table-column align="center" label="金额(¥)" prop="totalAmount" sortable/>
+      <el-table-column align="center" label="金额(¥)" prop="amount" sortable/>
       <el-table-column align="center" label="是否到账" prop="isReceived" sortable>
         <template #default="scope">
-          <el-tag v-if="scope.row.isReceived" type="success">已到账</el-tag>
+          <el-tag v-if="scope.row.isReceived === 1" type="success">已到账</el-tag>
           <el-tag v-else type="danger">未到账</el-tag>
         </template>
       </el-table-column>
@@ -76,49 +76,68 @@
           :total="income_page.totalCount"
       />
     </div>
+
+    <table-dialog
+        v-model:visible="tableDialogVisible"
+        :type="tableDialogType"
+        :data="tableClickRow"
+    />
+
+
   </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {Delete, Edit} from "@element-plus/icons-vue";
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import {ElConfigProvider} from "element-plus";
 import {shortcuts} from "@/utils";
-
+import {getIncomeListInfo} from "@/api/incomeList";
+import dayjs from "dayjs";
+import TableDialog from "./table-dialog.vue";
 
 const locale = ref(zhCn)
 
+onMounted(() => {
+  getIncomeList()
+})
+
 // 表格数据
-const tableData = ref([
-  {
-    id: 1,
-    date: '2021-01-01',
-    type: '工资',
-    totalAmount: 1000,
-    isReceived: true,
-    remark: '备注'
-  },
-  {
-    id: 2,
-    date: '2021-01-02',
-    type: '其他',
-    totalAmount: 2000,
-    isReceived: false,
-    remark: '备注'
-  }
-])
+const tableData = ref([])
 
 // 分页
 const income_page = ref({
   page: 1, // 当前页数，即请求中传入的page参数。
-  limit: 9, // 每页返回的数据量，即请求中传入的limit参数。
+  limit: 8, // 每页返回的数据量，即请求中传入的limit参数。
   totalCount: 0, // 满足查询条件的总数据量，也就是不考虑分页时查询结果的总数。
 })
 
+// 请求表格数据
+const getIncomeList = async () => {
+  const res = await getIncomeListInfo({
+    page: income_page.value.page,
+    limit: income_page.value.limit
+  })
+
+  res.list.forEach(item => {
+    item.date = dayjs(item.date).format('YYYY-MM-DD')
+  })
+
+  tableData.value = res.list
+  income_page.value = res.pagination
+}
+
+// 弹窗相关
+const tableDialogVisible = ref(false)
+const tableDialogType = ref('add')
+const tableClickRow = ref({})
+
 // 新增或者编辑
 const handleIncomeAddOrEdit = (type, row) => {
-  console.log(type, row)
+  tableDialogType.value = type
+  tableClickRow.value = row
+  tableDialogVisible.value = true
 }
 
 // 删除
@@ -164,6 +183,24 @@ const handleIncomeResize = () => {
   incomeFormDate.value = []
   incomeFormSearch.value = {}
 }
+
+
+// 监听分页
+watch(
+    () => ({
+      card_page: income_page.value.page,
+      dialog_visible: tableDialogVisible.value
+    }),
+    async (newVal, oldVal) => {
+      if (newVal.card_page !== oldVal.card_page) {
+        await getIncomeList()
+      }
+      // 需要在关闭弹窗的时候, 重新请求一下数据, 以保证数据是最新的
+      if (newVal.dialog_visible === false && oldVal.dialog_visible === true) {
+        await getIncomeList()
+      }
+    }
+)
 
 
 </script>

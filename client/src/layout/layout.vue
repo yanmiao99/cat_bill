@@ -169,6 +169,7 @@ const handleLogout = (key: string) => {
     .el-menu-item {
       width: v-bind("isCollapse ? '100%' : '90%'");
       margin: 0 auto;
+      transition: all 0.3s;
 
       span {
         opacity: v-bind("isCollapse ? '0' : '1'");

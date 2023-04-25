@@ -6,9 +6,11 @@
   margin-bottom: 10px;
   border: 1px solid #ddd;
 
+
   .el-form {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
 
     .el-form-item {
       margin-bottom: 0;

@@ -43,6 +43,8 @@ createRouter('/api/user', require('./routes/user.js'));
 createRouter('/api/lendPeople', require('./routes/lendPeople.js'));
 createRouter('/api/lend', require('./routes/lend.js'));
 createRouter('/api/upload', require('./routes/upload.js'));
+createRouter('/api/incomeList', require('./routes/incomeList.js'));
+
 
 // 异常捕获的中间件 ( 需要放在所有路由的最后面 )
 app.use((err, req, res, next) => {
