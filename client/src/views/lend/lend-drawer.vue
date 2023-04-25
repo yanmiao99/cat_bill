@@ -58,12 +58,12 @@
         </el-table-column>
         <el-table-column align="center" label="操作" width="130">
           <template #default="scope">
-              <el-button plain type="success" :icon="Edit" @click="handleDialogAddOrEdit('edit',scope.row)"/>
-              <el-popconfirm title="你确定删除该条数据吗?" @confirm="handleLendDelete(scope.row)">
-                <template #reference>
-                  <el-button plain type="danger" :icon="Delete"/>
-                </template>
-              </el-popconfirm>
+            <el-button plain type="success" :icon="Edit" @click="handleDialogAddOrEdit('edit',scope.row)"/>
+            <el-popconfirm title="你确定删除该条数据吗?" @confirm="handleLendDelete(scope.row)">
+              <template #reference>
+                <el-button plain type="danger" :icon="Delete"/>
+              </template>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -153,12 +153,16 @@ const handleDialogAddOrEdit = (type, row) => {
 
 // 删除借款记录
 const handleLendDelete = async (item) => {
-  await deleteLendInfo({
-    LendPersonId: props.lendPersonId,
-    id: item.id
-  })
-  ElMessage.success('删除成功')
-  await getLendData(props.lendPersonId)
+  try {
+    await deleteLendInfo({
+      LendPersonId: props.lendPersonId,
+      id: item.id
+    })
+    ElMessage.success('删除成功')
+    await getLendData(props.lendPersonId)
+  } catch (e) {
+
+  }
 }
 
 // 借款记录分页

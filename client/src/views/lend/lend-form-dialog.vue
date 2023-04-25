@@ -2,6 +2,8 @@
   <el-dialog
       :model-value="visible"
       :title="dialogTitle"
+      width="40%"
+      draggable
       @close="dialogShow"
       align-center>
     <el-form
@@ -23,20 +25,12 @@
         </ElConfigProvider>
       </el-form-item>
       <el-form-item label="金额(¥)" prop="amount">
-        <el-input-number
-            v-model="lendFormDialogData.amount"
-            style="width: 100%"
-            clearable
-            :precision="2" :step="0.1" :max="99999"
-            placeholder="请输入金额" controls-position="right" :value-on-clear="0"/>
+        <el-input :prefix-icon="Money" v-model="lendFormDialogData.amount" style="width: 100%" clearable
+                  placeholder="请输入金额"/>
       </el-form-item>
       <el-form-item label="利息(¥)" prop="interest">
-        <el-input-number
-            v-model="lendFormDialogData.interest"
-            style="width: 100%"
-            clearable
-            :precision="2" :step="0.1" :max="99999"
-            placeholder="请输入利息" controls-position="right" :value-on-clear="0"/>
+        <el-input :prefix-icon="Money" v-model="lendFormDialogData.interest" style="width: 100%" clearable
+                  placeholder="请输入利息"/>
       </el-form-item>
       <el-form-item label="凭证" prop="voucher">
         <el-upload
@@ -117,7 +111,7 @@
 
 <script setup>
 import {ElConfigProvider, ElMessage} from 'element-plus'
-import {Delete, UploadFilled} from "@element-plus/icons-vue";
+import {Delete, Money, UploadFilled} from "@element-plus/icons-vue";
 import {nextTick, ref, watch} from "vue";
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import {uploadImage} from "@/api/upload";
@@ -307,11 +301,19 @@ const handleLendFormDialogSubmit = async (formEl) => {
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       if (props.type === 'add') {
-        await addLendInfo(params)
-        ElMessage.success('数据提交成功')
+        try {
+          await addLendInfo(params)
+          ElMessage.success('数据提交成功')
+        } catch (e) {
+
+        }
       } else {
-        await editLendInfo(params)
-        ElMessage.success('数据修改成功')
+        try {
+          await editLendInfo(params)
+          ElMessage.success('数据修改成功')
+        } catch (e) {
+
+        }
       }
       handleLendFormResize(formEl)
       dialogShow()

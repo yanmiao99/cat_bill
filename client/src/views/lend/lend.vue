@@ -50,9 +50,11 @@
           :total="lendPeople_page.totalCount"
       />
     </div>
-    <el-dialog v-model="dialogLendPeopleFormVisible"
-               width="30%"
-               :title="`${LendPeopleType === 'add' ? '新增' : '编辑'}借款人信息`">
+    <el-dialog
+        v-model="dialogLendPeopleFormVisible"
+        width="30%"
+        draggable
+        :title="`${LendPeopleType === 'add' ? '新增' : '编辑'}借款人信息`">
       <el-form :model="lendPeopleForm">
         <el-form-item label="借款人名称" :label-width="100">
           <el-input v-model="lendPeopleForm.borrower"
@@ -199,11 +201,16 @@ const dialogLendPeopleFormSubmit = async () => {
 
 // 删除借款人
 const handleLendPeopleDelete = async (item) => {
-  await deleteLendPeopleInfo({
-    id: item.id
-  })
-  ElMessage.success('删除成功')
-  await getLendPeople()
+  try {
+    await deleteLendPeopleInfo({
+      id: item.id
+    })
+    ElMessage.success('删除成功')
+    await getLendPeople()
+  } catch (e) {
+
+  }
+
 }
 
 // 监听分页

@@ -91,9 +91,9 @@
 import {ref, watch} from "vue";
 import {Delete, Edit} from "@element-plus/icons-vue";
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import {ElConfigProvider} from "element-plus";
+import {ElConfigProvider, ElMessage} from "element-plus";
 import {shortcuts} from "@/utils";
-import {getIncomeListInfo} from "@/api/incomeList";
+import {getIncomeListInfo, deleteIncomeListInfo} from "@/api/incomeList";
 import dayjs from "dayjs";
 import TableDialog from "./table-dialog.vue";
 
@@ -141,8 +141,16 @@ const handleIncomeAddOrEdit = (type, row) => {
 }
 
 // 删除
-const handleIncomeDelete = (row) => {
-  console.log(row)
+const handleIncomeDelete = async (row) => {
+  try {
+    await deleteIncomeListInfo({
+      id: row.id
+    })
+    await getIncomeList()
+    ElMessage.success('删除成功')
+  } catch (e) {
+    
+  }
 }
 
 // 初始日期
