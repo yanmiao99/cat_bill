@@ -12,34 +12,48 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,          // 是否是主键
       autoIncrement: true,       // 是否自增
+      allowNull: false,
     },
     // 日期
-    date: DataTypes.DATE, // 时间格式是ISO 8601格式的时间字符串
+    date: {
+      type: DataTypes.DATE, // 时间格式是ISO 8601格式的时间字符串
+      allowNull: false
+    },
     // 金额
     amount: {
-      type: DataTypes.DOUBLE,
+      type: DataTypes.INTEGER,
       defaultValue: 0,
+      allowNull: false
     },
     // 原因
     reason: DataTypes.STRING,
     // 还款日期
-    repaymentDate: DataTypes.DATE,
+    repaymentDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
     // 还款类型
     type: {
       type: DataTypes.INTEGER,
-      defaultValue: 1 // 0 分期还 1 一次性还
+      defaultValue: 1, // 0 分期还 1 一次性还
+      allowNull: false
     },
     // 利息
     interest: {
       type: DataTypes.DOUBLE,
-      defaultValue: 0
+      defaultValue: 0,
+      allowNull: false
     },
     // 凭证
-    voucher: DataTypes.STRING,
+    voucher: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     // 是否结清
     settle: {
       type: DataTypes.INTEGER,
-      defaultValue: 0 // 0 未结清 1 已结清
+      defaultValue: 0, // 0 未结清 1 已结清
+      allowNull: false
     },
     // 备注
     remark: {
@@ -47,7 +61,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     isDelete: {
       type: DataTypes.INTEGER,
-      defaultValue: 0 // 0 在用 1 删除
+      defaultValue: 0, // 0 在用 1 删除
+      allowNull: false
     }
   }, {
     sequelize,

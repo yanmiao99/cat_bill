@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,          // 是否是主键
       autoIncrement: true,       // 是否自增
+      allowNull: false
     },
     originalname: {
       type: DataTypes.STRING,
@@ -27,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     isDelete: {
       type: DataTypes.INTEGER,
-      defaultValue: 0
+      defaultValue: 0,
+      allowNull: false
     }
   }, {
     sequelize,

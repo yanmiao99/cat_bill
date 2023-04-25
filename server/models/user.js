@@ -12,12 +12,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,          // 是否是主键
       autoIncrement: true,       // 是否自增
+      allowNull: false
     },
-    username: DataTypes.STRING,
-    password: DataTypes.STRING,
+    username: {
+      type: DataTypes.STRING,
+      unique: true,              // 是否唯一
+      allowNull: false
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     status: {
       type: DataTypes.INTEGER,
-      defaultValue: 0 // 0 可用 1 注销
+      defaultValue: 0, // 0 可用 1 注销
+      allowNull: false
     }
   }, {
     sequelize,

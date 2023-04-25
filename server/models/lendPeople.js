@@ -13,17 +13,24 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,          // 是否是主键
       autoIncrement: true,       // 是否自增
+      allowNull: false
     },
     // 借款人
-    borrower: DataTypes.STRING,
+    borrower: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,              // 是否唯一
+    },
     // 总金额
     totalAmount: {
-      type: DataTypes.DOUBLE,
+      type: DataTypes.INTEGER,
       defaultValue: 0,
+      allowNull: false
     },
     isDelete: {
       type: DataTypes.INTEGER,
-      defaultValue: 0 // 0 在用 1 删除
+      defaultValue: 0, // 0 在用 1 删除
+      allowNull: false
     }
   }, {
     sequelize,
