@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {LendPeople, Lend, User} = require('../models')
+const {LendPeople, Lend} = require('../models')
 const log4js = require('../utils/log4j.js')
 const {Op} = require("sequelize");
 
@@ -98,11 +98,12 @@ router.get('/list', async (req, res) => {
       }
 
       item.Lends.forEach(lend => {
+        item.originalTotalAmount += lend.amount // 原始的总金额
         item.totalAmount += lend.amount
       })
 
       await LendPeople.update(
-        {totalAmount: item.totalAmount},
+        {totalAmount: item.originalTotalAmount},
         {
           where: {
             UserId: currentUserId,

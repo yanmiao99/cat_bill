@@ -25,10 +25,7 @@
         :data="lendPeopleData"
         stripe
         border
-        :summary-method="formatStatistics"
-        empty-text="暂无数据"
-        show-summary
-        sum-text="合计">
+        empty-text="暂无数据">
       <el-table-column align="center" label="ID" prop="id" sortable width="70"/>
       <el-table-column align="center" label="姓名" prop="borrower" sortable/>
       <el-table-column align="center" label="总金额(¥)" prop="totalAmount" sortable/>
@@ -62,7 +59,6 @@
                     v-auto-focus
                     placeholder="请输入借款人名称"
                     autocomplete="off"
-                    @keyup.enter.native="dialogLendPeopleFormSubmit"
           />
         </el-form-item>
       </el-form>
@@ -94,7 +90,6 @@ import {
 import {Delete, Edit, View, Search} from "@element-plus/icons-vue";
 import {ElMessage} from 'element-plus'
 import LendDrawer from "./lend-drawer.vue";
-import {formatStatistics} from "@/utils";
 
 onMounted(() => {
   getLendPeople()

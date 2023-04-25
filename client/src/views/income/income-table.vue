@@ -39,10 +39,7 @@
         :data="tableData"
         stripe
         border
-        :summary-method="formatStatistics"
-        empty-text="暂无数据"
-        show-summary
-        sum-text="合计">
+        empty-text="暂无数据">
       <el-table-column align="center" label="ID" prop="id" sortable width="70"/>
       <el-table-column align="center" label="日期" prop="date" sortable/>
       <el-table-column align="center" label="类型" prop="type" sortable/>
@@ -84,7 +81,6 @@
 
 <script setup>
 import {ref} from "vue";
-import {formatStatistics} from "@/utils";
 import {Delete, Edit} from "@element-plus/icons-vue";
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import {ElConfigProvider} from "element-plus";

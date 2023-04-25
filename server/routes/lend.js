@@ -3,6 +3,8 @@ const express = require('express')
 const router = express.Router()
 const {Lend} = require('../models')
 const log4js = require('../utils/log4j.js')
+const {formatNumber} = require("../utils");
+
 
 // 定义参数校验中间件
 const validateParams = (requiredParams) => {
@@ -50,9 +52,10 @@ router.post('/add',
       settle, remark, LendPersonId
     } = req.body
 
+
     try {
       await Lend.create({
-        date, amount, reason,
+        amount, date, reason,
         repaymentDate, type, interest, voucher,
         settle, remark, LendPersonId
       })
@@ -104,6 +107,13 @@ router.get('/list', async (req, res) => {
         isDelete: 0
       }
     })
+
+    lendList.forEach(item => {
+      item.amount = formatNumber(item.amount)
+      item.interest = formatNumber(item.interest)
+    })
+
+
     const totalPages = Math.ceil(totalCount / limit)
     log4js.info(`查询借款人id为 ${LendPersonId} 的借出记录成功`)
     res.send({
@@ -224,7 +234,7 @@ router.post("/update",
   }),
   async (req, res) => {
     const {
-      LendPersonId,id, date, amount, reason,
+      LendPersonId, id, date, amount, reason,
       repaymentDate, type, interest, voucher,
       settle, remark
     } = req.body
@@ -232,7 +242,7 @@ router.post("/update",
     try {
       const [num, rows] = await Lend.update(
         {
-          date, amount, reason,
+          amount, date, reason,
           repaymentDate, type, interest, voucher,
           settle, remark
         },

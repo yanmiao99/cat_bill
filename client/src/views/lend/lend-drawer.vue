@@ -13,10 +13,7 @@
           :data="lendData"
           stripe
           border
-          :summary-method="formatStatistics"
-          empty-text="暂无数据"
-          show-summary
-          sum-text="合计">
+          empty-text="暂无数据">
         <el-table-column align="center" label="ID" prop="id" width="70"/>
         <el-table-column align="center" label="借款日期" width="130" prop="date" sortable/>
         <el-table-column align="center" label="还款日期" width="130" prop="repaymentDate" sortable/>
@@ -95,7 +92,6 @@
 import {ref, watch} from "vue";
 import {deleteLendInfo, getLendInfo} from "@/api/lend";
 import dayjs from "dayjs";
-import {formatStatistics} from "@/utils";
 import {Delete, Edit} from "@element-plus/icons-vue";
 import {ElMessage} from 'element-plus'
 import LendFormDialog from "./lend-form-dialog.vue";

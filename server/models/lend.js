@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     // 金额
     amount: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DOUBLE,
       defaultValue: 0,
       allowNull: false
     },
