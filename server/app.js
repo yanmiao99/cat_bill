@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const log4js = require('./utils/log4j.js')
-const {PORT} = require("./config/index.js")
+const {PORT, SALT} = require("./config/index.js")
 const passport = require('passport');
 const {resolve} = require("path");
 
@@ -19,23 +19,30 @@ app.use(cors()) // 解决跨域
 // 静态资源
 app.use('/public', express.static(resolve(__dirname, 'public')))  // 静态资源
 
-// 路由
-app.get('/', (req, res) => res.send('Hello World!'))
-app.use('/api/user', require('./routes/user.js'))
-// 统一身份验证 (需要token登录的接口)
-app.use(
-  '/api/lendPeople',
-  passport.authenticate('jwt', {session: false}),
-  require('./routes/lendPeople.js'));
-app.use(
-  '/api/lend',
-  passport.authenticate('jwt', {session: false}),
-  require('./routes/lend.js'));
-app.use(
-  '/api/upload',
-  passport.authenticate('jwt', {session: false}),
-  require('./routes/upload.js'));
+// 封装统一的身份验证中间件
+const authenticate = (req, res, next) => {
+  passport.authenticate('jwt', {session: false}, (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.status(401).send({msg: '未登录或身份已过期'});
+    req.user = user;
+    next();
+  })(req, res, next);
+};
 
+// 路由
+app.use('/api/user', require('./routes/user.js'))
+
+// 统一身份验证 (需要token登录的接口)
+const createRouter = (path, handler) => {
+  const router = express.Router();
+  router.use(authenticate);
+  router.use(handler);
+  app.use(path, router);
+};
+createRouter('/api/user', require('./routes/user.js'));
+createRouter('/api/lendPeople', require('./routes/lendPeople.js'));
+createRouter('/api/lend', require('./routes/lend.js'));
+createRouter('/api/upload', require('./routes/upload.js'));
 
 // 异常捕获的中间件 ( 需要放在所有路由的最后面 )
 app.use((err, req, res, next) => {

@@ -42,6 +42,23 @@
               </template>
             </el-input>
           </el-form-item>
+          <el-form-item prop="captcha">
+            <div class="captcha_box">
+              <el-input
+                  v-model="userForm.captcha"
+                  type="text"
+                  clearable
+                  placeholder="验证码 : "
+                  autocomplete="off">
+                <template #prefix>
+                  <el-icon>
+                    <ScaleToOriginal/>
+                  </el-icon>
+                </template>
+              </el-input>
+              <div v-html="captcha_img" class="captcha_img" @click="getCaptchaImg"></div>
+            </div>
+          </el-form-item>
 
           <el-form-item prop="storePassword" class="auxiliary-box">
             <el-checkbox v-model="userForm.storePassword" label="记住密码" size="large"/>
@@ -64,7 +81,7 @@ import {useRouter} from "vue-router";
 import {usersStore} from "../../store/user"
 import config from "../../config/config"
 import {ElMessage} from 'element-plus'
-import {postLogin} from "../../api/user";
+import {postLogin, getCaptcha} from "../../api/user";
 import storage from "../../utils/storage";
 
 const userFormRef = ref<FormInstance>()
@@ -74,22 +91,33 @@ const store = usersStore()
 interface IUserForm {
   username: string,
   password: string,
-  storePassword: boolean
+  storePassword: boolean,
+  captcha: string,
 }
 
 onMounted(() => {
-  // userForm.value.storePassword = storage.getItem('storePassword') || false
-
   let storage_userForm = storage.getItem('userForm') || {}
   if (storage_userForm) {
     userForm.value = storage_userForm
   }
+  userForm.value.captcha = ''
+
+  getCaptchaImg()
 })
+
+const captcha = ref('')
+const captcha_img = ref('')
+// 获取验证码
+const getCaptchaImg = async () => {
+  const res = await getCaptcha()
+  captcha_img.value = res.captcha
+}
 
 const userForm: Ref<IUserForm> = ref({
   username: '',
   password: '',
   storePassword: false,
+  captcha: ''
 })
 
 const rules = ref({
@@ -100,6 +128,10 @@ const rules = ref({
   password: [
     {required: true, message: '请输入密码', trigger: 'blur'},
     {min: 6, max: 32, message: '密码长度应在6位数以上', trigger: 'blur'}
+  ],
+  captcha: [
+    {required: true, message: '请输入验证码', trigger: 'blur'},
+    {min: 4, max: 4, message: '验证码长度为4个字符', trigger: 'blur'}
   ],
 })
 
@@ -113,12 +145,16 @@ const submitForm = (formEl: FormInstance | undefined) => {
       } else {
         storage.clearItem('userForm')
       }
-      const res = await postLogin(userForm.value)
-      store.storeUserInfo(res)
-
-      // 完成提交, 清空表单
-      formEl.resetFields()
-      await router.push("/home")
+      try {
+        const res = await postLogin(userForm.value)
+        store.storeUserInfo(res)
+        // 完成提交, 清空表单
+        formEl.resetFields()
+        await router.push("/home")
+      } catch (e) {
+        await getCaptchaImg()
+        userForm.value.captcha = ''
+      }
     }
   })
 }
@@ -188,6 +224,19 @@ const handleForgotPassword = () => {
             color: #333;
             font-weight: 400 !important;
           }
+        }
+      }
+
+      .captcha_box {
+        display: flex;
+        align-items: center;
+        margin-top: -15px;
+        width: 100%;
+
+        .captcha_img {
+          width: 100px;
+          transform: scale(0.7);
+          cursor: pointer;
         }
       }
 

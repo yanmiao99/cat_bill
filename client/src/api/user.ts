@@ -4,7 +4,8 @@ import request from '@/utils/request'
 interface IParam {
   username: string,
   password: string,
-  autoLogin?: boolean
+  autoLogin?: boolean,
+  captcha: string
 }
 
 // 登录
@@ -21,6 +22,13 @@ export const postRegister = (param: IParam) => {
     method: 'post',
     url: '/user/register',
     data: param
+  })
+}
+// 获取验证码
+export const getCaptcha = () => {
+  return request({
+    method: 'get',
+    url: '/user/captcha'
   })
 }
 // 获取用户信息
