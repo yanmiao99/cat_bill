@@ -47,22 +47,22 @@ const getBoardData = async () => {
   cardList.value = [
     {
       title: "今日收入",
-      value: dayIncome || 0,
+      value: Number(dayIncome) || 0,
       bgText: '日'
     },
     {
       title: "本月收入",
-      value: monthIncome || 0,
+      value: Number(monthIncome) || 0,
       bgText: '月'
     },
     {
       title: "今年收入",
-      value: yearIncome || 0,
+      value: Number(yearIncome) || 0,
       bgText: '年'
     },
     {
       title: "本月工资",
-      value: monthSalary || 0,
+      value: Number(monthSalary) || 0,
       bgText: '固'
     }
   ]
