@@ -2,6 +2,7 @@ import {createRouter, createWebHashHistory, RouteRecordRaw} from "vue-router";
 import {routerMenu} from "./routerMenu";
 import config from "../config/config";
 import storage from "../utils/storage";
+import layout from "../layout/layout.vue";
 
 /*
 * createRouter 路由器
@@ -23,7 +24,8 @@ const routes: Array<RouteRecordRaw> = [
       title: '首页',
       requireAuth: false,
     },
-    component: () => import('../layout/layout.vue'),
+    // component: () => import('../layout/layout.vue'),
+    component: layout,
     children: [...routerMenu]
   },
   {
