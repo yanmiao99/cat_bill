@@ -1,8 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const {IncomeList} = require('../models')
+const {IncomeList, LendPeople} = require('../models')
 const log4js = require('../utils/log4j.js')
 const {formatNumber, validateParams} = require("../utils");
+const {Op} = require("sequelize");
+const dayjs = require('dayjs')
 
 /**
  * @api {post} /incomeList/add 添加一条收入记录
@@ -57,39 +59,67 @@ router.post('/add',
 router.get('/list', async (req, res) => {
   const page = parseInt(req.query.page) || 1
   const limit = parseInt(req.query.limit) || 10
+  const {type, startTime, endTime} = req.query
   const currentUserId = req.user.id
+
+  let searchWhere = {}
+  if (type || (startTime && endTime)) {
+    if (type) {
+      searchWhere.type = type
+    }
+    if (startTime && endTime) {
+      searchWhere.date = {
+        [Op.between]: [startTime, endTime]
+      }
+    }
+  }
 
   try {
     const offset = (page - 1) * limit
     const list = await IncomeList.findAll({
       // 查询条件需要查询isDelete为0的数据
       where: {
+        ...searchWhere,
         UserId: currentUserId,
         isDelete: 0
       },
       attributes: { // 设置排除的字段
-        exclude: ['isDelete', 'createdAt', 'updatedAt']
+        exclude: ['UserId', 'isDelete', 'createdAt', 'updatedAt']
       },
       offset,
       limit
+    })
+
+    const totalCount = await IncomeList.count({
+      where: {
+        ...searchWhere,
+        UserId: currentUserId,
+        isDelete: 0
+      }
     })
 
     list.forEach(item => {
       item.amount = formatNumber(item.amount)
     })
 
-    const totalCount = await IncomeList.count({
+
+    let typeList = await IncomeList.findAll({
       where: {
         UserId: currentUserId,
-        isDelete: 0
-      }
+        isDelete: 0,
+      },
+      group: ['type'],
+      attributes: ['type']
     })
+
+    const typeOptions = typeList.map(item => item.type);
 
     log4js.info(`查询收入记录成功`)
     res.send({
       code: 200,
       msg: '查询成功',
       data: {
+        options: typeOptions,
         list,
         pagination: {
           page, // 当前页数，即请求中传入的page参数。
@@ -230,5 +260,82 @@ router.post("/update",
       })
     }
   })
+
+
+// 看板数据
+router.get('/board', async (req, res) => {
+  const currentUserId = req.user.id
+
+  // dayjs 获取今年的开始日期和结束日期
+  const yearStart = dayjs().startOf('year').format('YYYY-MM-DD')
+  const yearEnd = dayjs().endOf('year').format('YYYY-MM-DD')
+  // dayjs 获取本月的开始日期和结束日期
+  const monthStart = dayjs().startOf('month').format('YYYY-MM-DD')
+  const monthEnd = dayjs().endOf('month').format('YYYY-MM-DD')
+
+  // 年收入
+  const yearIncome = await IncomeList.sum('amount', {
+    where: {
+      UserId: currentUserId,
+      isDelete: 0,
+      isReceived: 1,
+      date: {
+        [Op.between]: [yearStart, yearEnd]
+      }
+    }
+  })
+
+  // 月收入
+  const monthIncome = await IncomeList.sum('amount', {
+    where: {
+      UserId: currentUserId,
+      isDelete: 0,
+      isReceived: 1,
+      date: {
+        [Op.between]: [monthStart, monthEnd]
+      }
+    }
+  })
+
+  const today = new Date(); // 获取当前日期对象
+  today.setHours(0, 0, 0, 0); // 将时间部分设置为 0，只保留日期部分
+
+  // 今日收入
+  const dayIncome = await IncomeList.sum('amount', {
+    where: {
+      UserId: currentUserId,
+      isDelete: 0,
+      isReceived: 1,
+      date: {
+        [Op.gte]: today, // 大于等于今天零点的时间戳
+        [Op.lt]: new Date(today.getTime() + 24 * 60 * 60 * 1000), // 小于明天零点的时间戳
+      }
+    }
+  })
+
+  // 本月工资
+  const monthSalary = await IncomeList.sum('amount', {
+    where: {
+      UserId: currentUserId,
+      isDelete: 0,
+      isReceived: 1,
+      type: "工资",
+      date: {
+        [Op.between]: [monthStart, monthEnd]
+      }
+    }
+  })
+
+  res.send({
+    code: 200,
+    msg: '查询成功',
+    data: {
+      yearIncome: formatNumber(yearIncome || 0),
+      monthIncome: formatNumber(monthIncome || 0),
+      dayIncome: formatNumber(dayIncome || 0),
+      monthSalary: formatNumber(monthSalary || 0),
+    }
+  })
+})
 
 module.exports = router

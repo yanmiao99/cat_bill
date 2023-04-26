@@ -3,13 +3,15 @@
     <el-col :xs="24" :sm="12" :md="12" :lg="6" v-for="item in cardList" :key="item.title">
       <el-card shadow="hover">
         <div class="card_bg">
-          {{ item.title === '工资' ? '固' : item.title[0] }}
+          {{ item.bgText }}
         </div>
         <div class="card_content">
           <p class="title">{{ item.title }}</p>
           <p class="amount">
             <span>¥</span>
-            {{ item.value }}
+            <span class="money">
+              {{ item.value }}
+            </span>
           </p>
         </div>
       </el-card>
@@ -18,26 +20,55 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, onMounted} from "vue";
+import {getIncomeListBoard} from "@/api/incomeList";
+import {incomeStore} from "@/store/income";
+import {storeToRefs} from "pinia";
 
-const cardList = ref([
-  {
-    title: "日收入",
-    value: "4820.00",
-  },
-  {
-    title: "月收入",
-    value: "12310.00",
-  },
-  {
-    title: "年收入",
-    value: "334122.00",
-  },
-  {
-    title: "本月工资",
-    value: "14114.00",
+const store = incomeStore()
+
+const {board_update} = storeToRefs(store);
+
+// 监听store中的board_update
+watch(board_update, (newVal, oldValue) => {
+  if (newVal !== oldValue) {
+    getBoardData()
   }
-])
+})
+
+const getBoardData = async () => {
+  const res = await getIncomeListBoard();
+  let {dayIncome, monthIncome, yearIncome, monthSalary} = res;
+
+  cardList.value = [
+    {
+      title: "今日收入",
+      value: dayIncome || 0,
+      bgText: '日'
+    },
+    {
+      title: "本月收入",
+      value: monthIncome || 0,
+      bgText: '月'
+    },
+    {
+      title: "今年收入",
+      value: yearIncome || 0,
+      bgText: '年'
+    },
+    {
+      title: "本月工资",
+      value: monthSalary || 0,
+      bgText: '固'
+    }
+  ]
+}
+
+onMounted(() => {
+  getBoardData()
+})
+
+const cardList = ref([])
 
 </script>
 
@@ -69,14 +100,16 @@ const cardList = ref([
 
     .amount {
       margin-top: 20px;
-      font-weight: bold;
-      font-size: 30px;
       color: var(--el-color-primary);
       vertical-align: bottom;
 
       span {
         font-size: 20px;
-        vertical-align: bottom;
+      }
+
+      .money {
+        font-weight: bold;
+        font-size: 30px;
       }
     }
   }

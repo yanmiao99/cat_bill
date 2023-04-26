@@ -5,10 +5,10 @@
         <el-form-item>
           <el-select v-model="incomeFormSearch.type" filterable clearable placeholder="按类型搜索">
             <el-option
-                v-for="item in incomeFormOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in typeOptions"
+                :key="item"
+                :label="item"
+                :value="item"
             />
           </el-select>
         </el-form-item>
@@ -25,7 +25,7 @@
           </ElConfigProvider>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleIncomeSearch">查询</el-button>
+          <el-button type="primary" @click="getIncomeList">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="info" @click="handleIncomeResize" plain>重置</el-button>
@@ -76,29 +76,27 @@
           :total="income_page.totalCount"
       />
     </div>
-
     <table-dialog
         v-model:visible="tableDialogVisible"
         :type="tableDialogType"
         :data="tableClickRow"
     />
-
-
   </div>
 </template>
 
 <script setup>
 import {ref, watch} from "vue";
 import {Delete, Edit} from "@element-plus/icons-vue";
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import {ElConfigProvider, ElMessage} from "element-plus";
-import {shortcuts} from "@/utils";
+import {ElMessage, ElConfigProvider} from "element-plus";
 import {getIncomeListInfo, deleteIncomeListInfo} from "@/api/incomeList";
 import dayjs from "dayjs";
 import TableDialog from "./table-dialog.vue";
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import {shortcuts} from "@/utils";
+import {incomeStore} from "@/store/income";
 
+const store = incomeStore()
 const locale = ref(zhCn)
-
 onMounted(() => {
   getIncomeList()
 })
@@ -113,20 +111,44 @@ const income_page = ref({
   totalCount: 0, // 满足查询条件的总数据量，也就是不考虑分页时查询结果的总数。
 })
 
+// 收入类型
+const typeOptions = ref([])
+
+// 日期选择器
+const incomeFormDate = ref([])
+
+// 搜索数据
+const incomeFormSearch = ref({
+  type: '',
+  startTime: '',
+  endTime: ''
+})
+
 // 请求表格数据
 const getIncomeList = async () => {
-  const res = await getIncomeListInfo({
-    page: income_page.value.page,
-    limit: income_page.value.limit
-  })
+  const {page, limit} = income_page.value;
+  let params = {page, limit};
 
-  res.list.forEach(item => {
-    item.date = dayjs(item.date).format('YYYY-MM-DD')
-  })
+  if (incomeFormSearch.value.type) {
+    params.type = incomeFormSearch.value.type;
+  }
 
-  tableData.value = res.list
-  income_page.value = res.pagination
+  if (incomeFormDate.value && incomeFormDate.value.length > 0) {
+    params.startTime = dayjs(incomeFormDate.value[0]).format("YYYY-MM-DD");
+    params.endTime = dayjs(incomeFormDate.value[1]).format("YYYY-MM-DD");
+  }
+
+  const res = await getIncomeListInfo(params);
+  tableData.value = processData(res.list);
+  typeOptions.value = res.options;
+  income_page.value = res.pagination;
+
+  // 更新 pinia
+  store.board_update = !store.board_update;
 }
+
+const processData = (list) => list.map((item) => ({...item, date: dayjs(item.date).format("YYYY-MM-DD")}));
+
 
 // 弹窗相关
 const tableDialogVisible = ref(false)
@@ -149,49 +171,20 @@ const handleIncomeDelete = async (row) => {
     await getIncomeList()
     ElMessage.success('删除成功')
   } catch (e) {
-    
+
   }
 }
 
-// 初始日期
-const incomeFormDate = ref([])
-const incomeFormOptions = ref([
-  {
-    value: '工资',
-    label: '工资'
-  },
-  {
-    value: '其他',
-    label: '其他'
-  },
-  {
-    value: '私单',
-    label: '私单'
-  },
-  {
-    value: '套现',
-    label: '套现'
-  },
-])
-// 搜索数据
-const incomeFormSearch = ref({
-  type: '',
-  startTime: '',
-  endTime: ''
-})
-
-// 查询按钮
-const handleIncomeSearch = () => {
-  console.log(incomeFormDate)
-  console.log(incomeFormSearch)
-}
-
-// 重置按钮
-const handleIncomeResize = () => {
+// 重置
+const handleIncomeResize = async () => {
+  incomeFormSearch.value = {
+    type: '',
+    startTime: '',
+    endTime: ''
+  }
   incomeFormDate.value = []
-  incomeFormSearch.value = {}
+  await getIncomeList()
 }
-
 
 // 监听分页
 watch(

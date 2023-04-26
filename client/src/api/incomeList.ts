@@ -48,3 +48,12 @@ export const deleteIncomeListInfo = (param: IIncomeListInfoParam) => {
   })
 }
 
+// 看板数据
+export const getIncomeListBoard = (param: IIncomeListInfoParam) => {
+  return request({
+    method: 'get',
+    url: '/incomeList/board',
+    data: param
+  })
+}
+

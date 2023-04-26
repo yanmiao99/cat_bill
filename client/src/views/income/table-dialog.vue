@@ -23,12 +23,15 @@
         </ElConfigProvider>
       </el-form-item>
       <el-form-item label="金额(¥)" prop="amount">
-        <el-input :prefix-icon="Money" v-model="incomeFormData.amount" style="width: 100%" clearable placeholder="请输入金额"/>
+        <el-input :prefix-icon="Money" v-model="incomeFormData.amount" style="width: 100%" clearable
+                  placeholder="请输入金额"/>
       </el-form-item>
       <el-form-item label="收入类型" prop="type">
-        <el-select v-model="incomeFormData.type" placeholder="请选择收入类型" style="width: 100%">
-          <el-option label="工资" value="工资"/>
-        </el-select>
+        <el-radio-group v-model="incomeFormData.type">
+          <el-radio label="工资" border>工资</el-radio>
+          <el-radio label="私单" border>私单</el-radio>
+          <el-radio label="其他" border>其他</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="是否入账" prop="isReceived">
         <el-select v-model="incomeFormData.isReceived" placeholder="请选择是否入账" style="width: 100%">
@@ -63,6 +66,7 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import dayjs from "dayjs";
 import {addIncomeListInfo, editIncomeListInfo} from "@/api/incomeList";
 import {ElMessage} from "element-plus";
+import {Money} from "@element-plus/icons-vue";
 
 const locale = ref(zhCn)
 
@@ -80,7 +84,7 @@ const props = defineProps({
   data: {
     type: Object,
     require: true,
-  },
+  }
 })
 
 // 表单的显示和隐藏
@@ -127,8 +131,8 @@ const dialogTitle = ref('')
 const incomeFormData = ref({
   id: null,
   date: '',
-  type: '',
-  amount: 0,
+  type: '其他',
+  amount: 0.00,
   isReceived: 1,
   remark: '',
 })
@@ -158,8 +162,8 @@ const handleIncomeFormResize = (formRef) => {
   incomeFormData.value = {
     id: null,
     date: '',
-    type: '',
-    amount: 0,
+    type: '其他',
+    amount: 0.00,
     isReceived: 1,
     remark: '',
   }
