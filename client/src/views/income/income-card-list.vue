@@ -8,10 +8,13 @@
         <div class="card_content">
           <p class="title">{{ item.title }}</p>
           <p class="amount">
-            <span>¥</span>
-            <span class="money">
-              {{ item.value }}
-            </span>
+            <count-to
+                prefix="￥"
+                :startVal="0"
+                :endVal="item.value"
+                :decimals="2"
+                class="money"
+                :duration="500"/>
           </p>
         </div>
       </el-card>
@@ -24,6 +27,7 @@ import {ref, onMounted} from "vue";
 import {getIncomeListBoard} from "@/api/incomeList";
 import {incomeStore} from "@/store/income";
 import {storeToRefs} from "pinia";
+import {CountTo} from 'vue3-count-to';
 
 const store = incomeStore()
 
@@ -96,20 +100,17 @@ const cardList = ref([])
       font-weight: bold;
       font-size: 16px;
       color: #999;
+      padding-left: 10px;
     }
 
     .amount {
       margin-top: 20px;
       color: var(--el-color-primary);
-      vertical-align: bottom;
-
-      span {
-        font-size: 20px;
-      }
 
       .money {
         font-weight: bold;
         font-size: 30px;
+        margin-left: 5px;
       }
     }
   }

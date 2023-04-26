@@ -2,7 +2,7 @@
   <div class="income_table">
     <div class="header_operation">
       <el-form :inline="true" :model="incomeFormSearch">
-        <el-form-item>
+        <el-form-item label="类型">
           <el-select v-model="incomeFormSearch.type" filterable clearable placeholder="按类型搜索">
             <el-option
                 v-for="item in typeOptions"
@@ -12,7 +12,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="日期">
           <ElConfigProvider :locale="locale">
             <el-date-picker
                 v-model="incomeFormDate"
@@ -42,7 +42,20 @@
         empty-text="暂无数据">
       <el-table-column align="center" label="ID" prop="id" sortable width="70"/>
       <el-table-column align="center" label="日期" prop="date" sortable/>
-      <el-table-column align="center" label="类型" prop="type" sortable/>
+      <el-table-column align="center" label="类型" prop="type" sortable>
+        <template #default="scope">
+          <div class="type_box">
+          <span
+              class="type_dot"
+              :style="{backgroundColor:typeFormatter(scope.row.type)}">
+          </span>
+            <span
+                class="type_text"
+                :style="{color:typeFormatter(scope.row.type)}">
+            {{ scope.row.type }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="金额(¥)" prop="amount" sortable/>
       <el-table-column align="center" label="是否到账" prop="isReceived" sortable>
         <template #default="scope">
@@ -97,9 +110,15 @@ import {incomeStore} from "@/store/income";
 
 const store = incomeStore()
 const locale = ref(zhCn)
+
 onMounted(() => {
   getIncomeList()
 })
+
+// type 颜色格式化
+const typeFormatter = (cellValue) => {
+  return cellValue === '工资' ? '#409EFF' : cellValue === '私单' ? '#67C23A' : '#E6A23C'
+}
 
 // 表格数据
 const tableData = ref([])
@@ -207,5 +226,19 @@ watch(
 </script>
 
 <style scoped lang="scss">
+
+.type_box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .type_dot {
+    width: 6px;
+    height: 6px;
+    display: inline-block;
+    border-radius: 10px;
+    margin-right: 5px;
+  }
+}
 
 </style>

@@ -2,7 +2,7 @@
   <div class="lend">
     <div class="header_operation">
       <el-form :inline="true" :model="searchForm">
-        <el-form-item>
+        <el-form-item label="姓名">
           <el-input
               v-model="searchForm.borrower"
               clearable

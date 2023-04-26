@@ -44,6 +44,7 @@
             type="textarea"
             maxlength="100"
             show-word-limit
+            @keydown.enter="handleIncomeFormDialogSubmit(incomeFormRef)"
             v-model="incomeFormData.remark" clearable placeholder="请输入备注"/>
       </el-form-item>
     </el-form>
@@ -132,7 +133,7 @@ const incomeFormData = ref({
   id: null,
   date: '',
   type: '其他',
-  amount: 0.00,
+  amount: null,
   isReceived: 1,
   remark: '',
 })
@@ -163,7 +164,7 @@ const handleIncomeFormResize = (formRef) => {
     id: null,
     date: '',
     type: '其他',
-    amount: 0.00,
+    amount: null,
     isReceived: 1,
     remark: '',
   }

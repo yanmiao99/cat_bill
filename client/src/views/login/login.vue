@@ -48,6 +48,7 @@
                   v-model="userForm.captcha"
                   type="text"
                   clearable
+                  @keyup.enter="submitForm(userFormRef)"
                   placeholder="验证码 : "
                   autocomplete="off">
                 <template #prefix>
