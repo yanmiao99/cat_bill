@@ -3,6 +3,9 @@ import "@/styles/reset.css"
 import '@/styles/common.scss'
 import 'element-plus/dist/index.css'
 import ElementPlus from 'element-plus'
+import '@/styles/index.scss'
+
+
 import App from './App.vue'
 import {createPinia} from 'pinia'
 import router from './router/router'

@@ -9,9 +9,16 @@
     <title></title>
     <link rel="icon" href="/favicon.ico">
     <style>
-
         html, body {
-            background: #F4F6FA;
+            background: var(--el-border-color-extra-light);
+        }
+
+        html.dark .app-loading {
+            background-color: #2c344a !important;
+        }
+
+        html.dark .app-loading .app-loading-title {
+            color: rgb(255 255 255 / 85%) !important;
         }
 
         .app-loading {
@@ -21,7 +28,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            background-color: #f4f7f9;
+            background-color: #2c344a;
         }
 
         .app-loading .app-loading-wrap {
@@ -42,12 +49,6 @@
             color: #5bb36f;
             justify-content: center;
             align-items: center;
-        }
-
-        .app-loading .app-loading-logo {
-            display: block;
-            width: 200px;
-            margin: 20px auto;
         }
 
         .dot {
@@ -115,7 +116,6 @@
 <div id="app">
     <div class="app-loading">
         <div class="app-loading-wrap">
-            <!--<img src="/resource/img/logo-new.svg" class="app-loading-logo" alt="Logo" />-->
             <div class="app-loading-dots">
                 <span class="dot dot-spin"><i></i><i></i><i></i><i></i></span>
             </div>

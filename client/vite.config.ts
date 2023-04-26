@@ -17,7 +17,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@/styles/element.scss" as *;`,
+        additionalData: `@use "@/styles/element/index.scss" as *;`,
       },
     },
   },
@@ -39,7 +39,9 @@ export default defineConfig({
       imports: ['vue'],
     }),
     Components({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver({
+        importStyle: 'sass',
+      })],
       // 指定扫描组件库的路径
       dirs: ['src/components'],
       // 自动导入组件库

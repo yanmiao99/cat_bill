@@ -1,5 +1,5 @@
 <template>
-  <div class="basic-layout ">
+  <div class="basic-layout">
     <div class="nav-side">
       <div class="logo" v-show="!isCollapse">
         <img src="@/assets/images/logo.png" alt="logo">
@@ -7,8 +7,6 @@
       </div>
       <el-menu
           class="el-menu-vertical"
-          background-color="#fff"
-          text-color="#333"
           :collapse="isCollapse"
           router
           :default-active="defaultActive"
@@ -23,6 +21,7 @@
         </el-menu-item>
       </el-menu>
     </div>
+
     <div class="content-right">
       <div class="nav-top">
         <div class="bread">
@@ -47,11 +46,19 @@
             <span class="el-dropdown-link"></span>
             <template #dropdown>
               <el-dropdown-menu>
-                <!--<el-dropdown-item command="email">邮箱 : {{ userInfo.userEmail }}</el-dropdown-item>-->
                 <el-dropdown-item>退出</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
+          <!-- 暗黑模式 -->
+          <el-button size="small" @click="toggleDark()" round style="margin-left: 10px">
+            <el-icon v-if="isDark">
+              <Sunny/>
+            </el-icon>
+            <el-icon v-else>
+              <Moon/>
+            </el-icon>
+          </el-button>
         </div>
       </div>
       <div class="wrapper" v-cloak>
@@ -73,6 +80,11 @@ import config from "../config/config";
 import storage from "../utils/storage";
 import {getCurrentUserInfo} from "../api/user";
 import {ElNotification} from "element-plus";
+import {useDark, useToggle} from "@vueuse/core";
+
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
+
 
 const router = useRouter()
 
@@ -131,14 +143,13 @@ const handleLogout = (key: string) => {
 
   .nav-side {
     position: fixed;
-    width: v-bind("isCollapse ? '60px' : '200px'");
+    width: v-bind("isCollapse ? '65px' : '200px'");
     height: 100vh;
-    background: #fff;
+    background: var(--el-bg-color-overlay);
     overflow-y: auto;
-    //transition: width 0.3s;
     transition: v-bind(isTransition);
     color: #fff;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid var(--el-border-color-lighter);
     z-index: 100;
 
 
@@ -155,7 +166,7 @@ const handleLogout = (key: string) => {
       }
 
       h1 {
-        width: 70px;
+        width: 65px;
         font-size: 20px;
         line-height: 1.7em;
         color: var(--el-color-primary);
@@ -188,7 +199,7 @@ const handleLogout = (key: string) => {
   }
 
   .content-right {
-    margin-left: v-bind("isCollapse ? '60px' : '200px'");
+    margin-left: v-bind("isCollapse ? '65px' : '200px'");
     //transition: margin-left 0.3s;
     transition: v-bind(isTransition);
 
@@ -198,18 +209,17 @@ const handleLogout = (key: string) => {
       z-index: 99;
       width: 100%;
       right: 0;
-      background: #fff;
+      background: var(--el-bg-color-overlay);
       height: 50px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: #333;
       padding: 10px 20px;
       box-sizing: border-box;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid var(--el-border-color-lighter);
 
       .bread {
-        margin-left: v-bind("isCollapse ? '60px' : '200px'");
+        margin-left: v-bind("isCollapse ? '65px' : '200px'");
         display: flex;
         align-items: center;
 

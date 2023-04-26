@@ -171,7 +171,7 @@ const handleForgotPassword = () => {
 
 <style scoped lang="scss">
 .login {
-  background: url("@/assets/images/login/bg.svg") center 110px / 100% no-repeat #f0f2f5;
+  background: url("@/assets/images/login/bg.svg") center 110px / 100% no-repeat var(--el-border-color-extra-light);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -222,7 +222,7 @@ const handleForgotPassword = () => {
           }
 
           .el-checkbox.el-checkbox--large .el-checkbox__label {
-            color: #333;
+            color: var(--el-text-color-primary);
             font-weight: 400 !important;
           }
         }

@@ -85,7 +85,7 @@ const cardList = ref([])
   .card_bg {
     font-size: 80px;
     font-weight: bold;
-    color: #F4F6FA;
+    color: var(--el-border-color-extra-light);
     position: absolute;
     right: 10px;
     top: 10px;
