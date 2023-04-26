@@ -85,7 +85,6 @@ import {useDark, useToggle} from "@vueuse/core";
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
 
-
 const router = useRouter()
 
 let isCollapse: Ref<boolean> = ref(false)
@@ -112,7 +111,19 @@ onMounted(async () => {
     offset: 50,
     duration: 1500,
   })
+
+  isDarkMode()
 })
+
+// 系统颜色跟随
+const isDarkMode = () => {
+  const media = window.matchMedia('(prefers-color-scheme:dark)');
+  if (media.matches) {
+    toggleDark(true)
+  } else {
+    toggleDark(false)
+  }
+}
 
 
 // 获取当前路由

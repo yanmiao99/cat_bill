@@ -15,7 +15,8 @@ import layout from "../layout/layout.vue";
 * */
 
 // 页面路由
-const routes: Array<RouteRecordRaw> = [
+// Array<RouteRecordRaw>  这个会导致路由正常加载的热更新失效 , 但是不会影响页面的正常加载
+const routes = [
   {
     name: 'layout',
     path: '/',
@@ -24,7 +25,6 @@ const routes: Array<RouteRecordRaw> = [
       title: '首页',
       requireAuth: false,
     },
-    // component: () => import('../layout/layout.vue'),
     component: layout,
     children: [...routerMenu]
   },
