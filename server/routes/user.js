@@ -71,7 +71,6 @@ router.get('/captcha', async (req, res) => {
   try {
     const options = {
       width: 100,
-      color:'red',
     };
     const captcha = svgCaptcha.create(options);
     res.type('svg');
