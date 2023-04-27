@@ -2,7 +2,6 @@ import {createRouter, createWebHashHistory, RouteRecordRaw} from "vue-router";
 import {routerMenu} from "./routerMenu";
 import config from "../config/config";
 import storage from "../utils/storage";
-import layout from "../layout/layout.vue";
 
 /*
 * createRouter 路由器
@@ -15,8 +14,7 @@ import layout from "../layout/layout.vue";
 * */
 
 // 页面路由
-// Array<RouteRecordRaw>  这个会导致路由正常加载的热更新失效 , 但是不会影响页面的正常加载
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   {
     name: 'layout',
     path: '/',
@@ -25,7 +23,7 @@ const routes = [
       title: '首页',
       requireAuth: false,
     },
-    component: layout,
+    component: () => import('../layout/layout.vue'),
     children: [...routerMenu]
   },
   {

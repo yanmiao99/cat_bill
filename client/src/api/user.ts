@@ -2,10 +2,11 @@
 import request from '@/utils/request'
 
 interface IParam {
-  username: string,
-  password: string,
+  username?: string | number,
+  password: string | number,
   autoLogin?: boolean,
-  captcha: string
+  captcha?: string | number,
+  checkPassword?: string | number,
 }
 
 // 登录
@@ -36,5 +37,14 @@ export const getCurrentUserInfo = () => {
   return request({
     method: 'get',
     url: '/user/current'
+  })
+}
+
+// 修改密码
+export const postChangePassword = (param: IParam) => {
+  return request({
+    method: 'post',
+    url: '/user/updatePassword',
+    data: param
   })
 }

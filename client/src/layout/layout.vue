@@ -21,7 +21,6 @@
         </el-menu-item>
       </el-menu>
     </div>
-
     <div class="content-right">
       <div class="nav-top">
         <div class="bread">
@@ -46,7 +45,8 @@
             <span class="el-dropdown-link"></span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>退出</el-dropdown-item>
+                <el-dropdown-item command="people_center">个人中心</el-dropdown-item>
+                <el-dropdown-item command="exit">退出</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -61,7 +61,7 @@
           </el-button>
         </div>
       </div>
-      <div class="wrapper" v-cloak>
+      <div class="wrapper">
         <router-view v-slot="{ Component }">
           <transition>
             <component :is="Component"/>
@@ -70,6 +70,46 @@
       </div>
     </div>
   </div>
+
+  <el-dialog v-model="peopleCenterVisible" title="个人信息修改" align-center width="40%">
+    <el-form :model="peopleCenterForm" :rules="peopleCenterRules" label-width="90" ref="peopleCenterFormRef">
+      <el-form-item label="用户名 : " prop="username">
+        <el-input v-model="peopleCenterForm.username" disabled autocomplete="off" placeholder="用户名"/>
+      </el-form-item>
+      <el-form-item label="密码 : " prop="password">
+        <el-input
+            v-model="peopleCenterForm.password"
+            autocomplete="off"
+            placeholder="密码"
+            show-password
+            show-word-limit
+            maxlength="10"
+            type="password"
+            clearable
+        />
+      </el-form-item>
+      <el-form-item label="确认密码 : " prop="checkPassword">
+        <el-input
+            v-model="peopleCenterForm.checkPassword"
+            autocomplete="off"
+            placeholder="请再次输入密码"
+            show-password
+            show-word-limit
+            maxlength="10"
+            type="password"
+            clearable
+        />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="peopleCenterVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handlePeopleCenterSubmit(peopleCenterFormRef)">
+          确 认
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -78,8 +118,8 @@ import {useRouter} from "vue-router"
 import {routerMenu} from "../router/routerMenu";
 import config from "../config/config";
 import storage from "../utils/storage";
-import {getCurrentUserInfo} from "../api/user";
-import {ElNotification} from "element-plus";
+import {getCurrentUserInfo, postChangePassword} from "../api/user";
+import {ElMessage, ElNotification} from "element-plus";
 import {useDark, useToggle} from "@vueuse/core";
 
 const isDark = useDark();
@@ -127,6 +167,72 @@ const handleIsCollapse = () => {
 
 // 退出登录
 const handleLogout = (key: string) => {
+  const map: any = {
+    people_center: handlePeopleCenter,
+    exit: handleExit
+  }
+  map[key]()
+}
+
+const peopleCenterVisible = ref(false)
+const peopleCenterForm = ref({
+  username: '',
+  password: '',
+  checkPassword: ''
+})
+const peopleCenterFormRef = ref(null)
+const peopleCenterRules = ref({
+  password: [
+    {required: true, message: '请输入密码', trigger: 'blur'},
+    {min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur'}
+  ],
+  checkPassword: [
+    {required: true, message: '请再次输入密码', trigger: 'blur'},
+    {min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur'},
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (value === peopleCenterForm.value.password) {
+          callback()
+        } else {
+          callback(new Error('两次输入密码不一致'))
+        }
+      }, trigger: 'blur'
+    }
+  ]
+})
+
+// 提交信息
+const handlePeopleCenterSubmit = async (formEl: any) => {
+  if (!formEl) return
+  await formEl.validate(async (valid: any) => {
+    if (valid) {
+      // 修改密码
+      try {
+        await postChangePassword({
+          ...peopleCenterForm.value
+        })
+        ElMessage.success('修改成功,请重新登录')
+        setTimeout(() => {
+          // 清空本地信息
+          storage.clearAll()
+          // 退出登录
+          handleExit()
+        }, 1000)
+      } catch (e) {
+
+      }
+    }
+  })
+}
+
+// 个人中心
+const handlePeopleCenter = () => {
+  peopleCenterVisible.value = true
+  peopleCenterForm.value.username = username.value
+}
+
+// 退出登录
+const handleExit = () => {
   storage.clearItem('userInfo')
   router.push('/login')
 }
