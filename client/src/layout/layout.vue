@@ -111,20 +111,7 @@ onMounted(async () => {
     offset: 50,
     duration: 1500,
   })
-
-  isDarkMode()
 })
-
-// 系统颜色跟随
-const isDarkMode = () => {
-  const media = window.matchMedia('(prefers-color-scheme:dark)');
-  if (media.matches) {
-    toggleDark(true)
-  } else {
-    toggleDark(false)
-  }
-}
-
 
 // 获取当前路由
 let defaultActive: Ref<string> = ref(location.hash.slice(1))
@@ -133,9 +120,7 @@ const isTransition = ref('none')
 // 菜单收缩
 const handleIsCollapse = () => {
   isCollapse.value = !isCollapse.value
-
   isTransition.value = 'all 0.3s'
-
   // isCollapse存储本地
   storage.setItem('isCollapse', isCollapse.value ? '1' : '0')
 }
