@@ -31,11 +31,11 @@ service.interceptors.request.use((req) => {
   }
   if (!headers.Authorization) headers.Authorization = 'Bearer ' + token
 
-  // 开启 loading 定时器，1000ms 后再显示 loading , 并且 将定时器存储到请求参数中
+  // 开启 loading 定时器，500ms 后再显示 loading , 并且 将定时器存储到请求参数中
   // @ts-ignore
   req.timer = setTimeout(() => {
     load.show()
-  }, 1000)
+  }, 500)
 
   return req;
 })
@@ -44,7 +44,7 @@ service.interceptors.request.use((req) => {
 service.interceptors.response.use(
   (res) => {
     // @ts-ignore
-    clearTimeout(res.config.timer) // 取消定时器
+    res.config.timer && clearTimeout(res.config.timer) // 取消定时器
     const {code, data, msg} = res.data
     if (code === 200) {
       load.hide() // 隐藏 loading
@@ -54,7 +54,7 @@ service.interceptors.response.use(
       return Promise.reject(msg || NETWORK_ERROR)
     }
   }, (error) => {
-    clearTimeout(error.config.timer) // 取消定时器
+    error.config.timer && clearTimeout(error.config.timer) // 取消定时器
     load.hide()
     if (error.response && error.response.status === 401) {
       // token 失效，跳转到登录页
