@@ -172,4 +172,50 @@ router.get(
   }
 );
 
+/**
+ * 修改密码
+ * @param username
+ * @param password
+ * @api {post} /api/user/updatePassword 修改密码
+ * @apiHeader {String} Authorization Bearer token
+ * @api {post} /api/user/updatePassword 修改密码
+ * @apiParam {String} newPassword 新密码
+ * @apiParam {String} confirmPassword 确认密码
+ *
+ *
+ */
+router.post(
+  '/updatePassword',
+  passport.authenticate('jwt', {session: false}),
+  async (req, res) => {
+    const {username,password, checkPassword} = req.body
+
+    if (password !== checkPassword) {
+      res.send({code: 400, msg: "两次密码不一致"})
+    } else {
+      try {
+        const cryptoPassword = md5(password + SALT);
+        await User.update({
+          password: cryptoPassword,
+        }, {
+          where: {
+            id: req.user.id,
+            username,
+          }
+        })
+        log4js.info('修改密码成功')
+        res.send({
+          code: 200,
+          msg: "修改密码成功",
+        })
+      } catch (err) {
+        log4js.error(err)
+        res.send({
+          code: 400,
+          msg: '修改密码失败',
+          data: err
+        })
+      }
+    }
+  })
 module.exports = router
