@@ -28,25 +28,5 @@ export const routerMenu = [
       requireAuth: true,
     },
     component: () => import('../views/income/income.vue'),
-  },
-  {
-    name: 'report',
-    path: '/report',
-    icon: 'TrendCharts',
-    meta: {
-      title: '报告',
-      requireAuth: true,
-    },
-    component: () => import('../views/report/report.vue'),
-  },
-  {
-    name: 'settings',
-    path: '/settings',
-    icon: 'Tools',
-    meta: {
-      title: '设置',
-      requireAuth: true,
-    },
-    component: () => import('../views/settings/settings.vue'),
-  },
+  }
 ]

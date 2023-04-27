@@ -162,7 +162,7 @@ const handleLogout = (key: string) => {
       }
 
       h1 {
-        width: 65px;
+        width: 80px;
         font-size: 20px;
         line-height: 1.7em;
         color: var(--el-color-primary);
