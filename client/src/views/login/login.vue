@@ -42,7 +42,7 @@
               </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="captcha">
+          <el-form-item prop="captcha" v-if="loginOrRegister === 'login'">
             <div class="captcha_box">
               <el-input
                   v-model="userForm.captcha"
@@ -61,13 +61,22 @@
             </div>
           </el-form-item>
 
-          <el-form-item prop="storePassword" class="auxiliary-box">
+          <el-form-item prop="storePassword" class="auxiliary-box" v-if="loginOrRegister === 'login'">
             <el-checkbox v-model="userForm.storePassword" label="记住密码" size="large"/>
             <span @click="handleForgotPassword">忘记密码?</span>
           </el-form-item>
 
           <el-form-item>
-            <el-button class="submit-btn" type="primary" @click="submitForm(userFormRef)">登 录</el-button>
+            <div class="form-btn-group">
+              <el-button class="submit-btn" type="primary" @click="submitForm(userFormRef)">
+                {{ loginOrRegister === 'login' ? '登 录' : '注 册' }}
+              </el-button>
+              <el-button plain type="primary" @click="handleToggleLoginOrRegister">
+                <el-icon>
+                  <Refresh/>
+                </el-icon>
+              </el-button>
+            </div>
           </el-form-item>
         </el-form>
       </div>
@@ -82,8 +91,9 @@ import {useRouter} from "vue-router";
 import {usersStore} from "../../store/user"
 import config from "../../config/config"
 import {ElMessage} from 'element-plus'
-import {postLogin, getCaptcha} from "../../api/user";
+import {postLogin, getCaptcha, postRegister} from "../../api/user";
 import storage from "../../utils/storage";
+import {useToggle} from "@vueuse/core";
 
 const userFormRef = ref<FormInstance>()
 const router = useRouter()
@@ -96,6 +106,7 @@ interface IUserForm {
   captcha: string,
 }
 
+
 onMounted(() => {
   let storage_userForm = storage.getItem('userForm') || {}
   if (storage_userForm) {
@@ -106,7 +117,19 @@ onMounted(() => {
   getCaptchaImg()
 })
 
-const captcha = ref('')
+// 登录或注册
+const loginOrRegister = ref('login')
+const toggleLoginOrRegister = useToggle(loginOrRegister);
+
+const handleToggleLoginOrRegister = () => {
+  if (loginOrRegister.value === 'login') {
+    toggleLoginOrRegister('register')
+  } else {
+    toggleLoginOrRegister('login')
+  }
+}
+
+
 const captcha_img = ref('')
 // 获取验证码
 const getCaptchaImg = async () => {
@@ -132,33 +155,55 @@ const rules = ref({
   ],
   captcha: [
     {required: true, message: '请输入验证码', trigger: 'blur'},
-    {min: 4, max: 4, message: '验证码长度为4个字符', trigger: 'blur'}
+    {min: 4, max: 4, message: '验证码长度为4个字符', trigger: 'blur'},
   ],
 })
 
-
+// 表单提交
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  formEl.validate(async (valid) => {
+  formEl.validate((valid) => {
     if (valid) {
-      if (userForm.value.storePassword) {
-        storage.setItem('userForm', userForm.value)
+      if (loginOrRegister.value === 'login') {
+        // 登录逻辑
+        loginFn(formEl)
       } else {
-        storage.clearItem('userForm')
-      }
-      try {
-        const res = await postLogin(userForm.value)
-        store.storeUserInfo(res)
-        // 完成提交, 清空表单
-        formEl.resetFields()
-        await router.push("/home")
-      } catch (e) {
-        await getCaptchaImg()
-        userForm.value.captcha = ''
+        // 注册逻辑
+        registerFn(formEl)
       }
     }
   })
 }
+
+const loginFn = async (formEl: any) => {
+  try {
+    const res = await postLogin(userForm.value)
+    store.storeUserInfo(res)
+    if (userForm.value.storePassword) {
+      storage.setItem('userForm', userForm.value)
+    } else {
+      storage.clearItem('userForm')
+    }
+    // 完成提交, 清空表单
+    formEl.resetFields()
+    await router.push("/home")
+  } catch (e) {
+    await getCaptchaImg()
+    userForm.value.captcha = ''
+  }
+}
+
+const registerFn = async (formEl: any) => {
+  try {
+    await postRegister(userForm.value)
+    // 完成提交, 清空表单
+    formEl.resetFields()
+    ElMessage.success('注册成功, 请登录')
+    toggleLoginOrRegister('login')
+  } catch (e) {
+  }
+}
+
 
 const handleForgotPassword = () => {
   ElMessage({
@@ -241,8 +286,15 @@ const handleForgotPassword = () => {
         }
       }
 
-      .submit-btn {
+      .form-btn-group {
         width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .submit-btn {
+          flex: 1;
+        }
       }
     }
   }

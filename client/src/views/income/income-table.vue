@@ -26,8 +26,6 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="getIncomeList">查询</el-button>
-        </el-form-item>
-        <el-form-item>
           <el-button type="info" @click="handleIncomeResize" plain>重置</el-button>
         </el-form-item>
         <el-form-item>
