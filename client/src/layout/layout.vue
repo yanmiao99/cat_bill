@@ -51,7 +51,7 @@
             </template>
           </el-dropdown>
           <!-- 暗黑模式 -->
-          <el-button size="small" @click="toggleDark()" round style="margin-left: 10px">
+          <el-button size="small" @click="toggleDark" round style="margin-left: 10px">
             <el-icon v-if="isDark">
               <Sunny/>
             </el-icon>
@@ -120,10 +120,17 @@ import config from "../config/config";
 import storage from "../utils/storage";
 import {getCurrentUserInfo, postChangePassword} from "../api/user";
 import {ElMessage, ElNotification} from "element-plus";
-import {useDark, useToggle} from "@vueuse/core";
+import {useDark} from "@vueuse/core";
+import {commonStore} from "../store/common";
+
+const store = commonStore()
 
 const isDark = useDark();
-const toggleDark = useToggle(isDark);
+const toggleDark = () => {
+  isDark.value = !isDark.value
+  store.setDarkMode(isDark.value === true ? 'dark' : 'light')
+};
+
 
 const router = useRouter()
 
