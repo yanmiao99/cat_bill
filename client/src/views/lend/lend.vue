@@ -54,13 +54,16 @@
         v-model="dialogLendPeopleFormVisible"
         width="30%"
         draggable
+        destroy-on-close
         :title="`${LendPeopleType === 'add' ? '新增' : '编辑'}借款人信息`">
       <el-form :model="lendPeopleForm">
         <el-form-item label="借款人名称" :label-width="100">
-          <el-input v-model="lendPeopleForm.borrower"
-                    v-auto-focus
-                    placeholder="请输入借款人名称"
-                    autocomplete="off"
+          <el-input
+              v-model="lendPeopleForm.borrower"
+              clearable
+              v-auto-focus
+              placeholder="请输入借款人名称"
+              @keydown.enter.native="dialogLendPeopleFormSubmit"
           />
         </el-form-item>
       </el-form>
@@ -81,7 +84,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from 'vue'
+import {onMounted, ref, watch, nextTick} from 'vue'
 import {
   addLendPeopleInfo,
   getLendPeopleInfo,
@@ -98,13 +101,15 @@ onMounted(() => {
 })
 
 // 在模板中启用 v-auto-focus
-const vAutoFocus = {
-  updated: (el) => {
-    setTimeout(() => {
-      el.querySelector('input').focus()
-    }, 0)
-  },
-}
+// const vAutoFocus = {
+//   mounted(el, binding) {
+//     nextTick(() => {
+//       setTimeout(() => {
+//         el.querySelector('input').focus()
+//       }, 100)
+//     })
+//   },
+// }
 
 // 借款人信息
 const lendPeopleData = ref([]);
