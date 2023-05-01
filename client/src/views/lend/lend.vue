@@ -1,12 +1,14 @@
 <template>
   <div class="lend">
     <div class="header_operation">
-      <el-form :inline="true" :model="searchForm">
-        <el-form-item label="姓名">
+      <el-form style="width: 100%" :inline="true" :model="searchForm">
+        <el-form-item label="姓名" style="flex: 1">
           <el-input
               v-model="searchForm.borrower"
               clearable
               :prefix-icon="Search"
+              style="width:100%"
+              @keydown.enter.native="handleSearch"
               placeholder="请输入姓名">
           </el-input>
         </el-form-item>
@@ -116,7 +118,7 @@ const lendPeopleData = ref([]);
 // 借款人分页
 const lendPeople_page = ref({
   page: 1, // 当前页数，即请求中传入的page参数。
-  limit: 9, // 每页返回的数据量，即请求中传入的limit参数。
+  limit: 10, // 每页返回的数据量，即请求中传入的limit参数。
   totalCount: 0, // 满足查询条件的总数据量，也就是不考虑分页时查询结果的总数。
 })
 // 获取借款人信息

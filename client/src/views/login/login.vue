@@ -18,6 +18,7 @@
                 type="text"
                 clearable
                 placeholder="账号 : "
+                v-auto-focus
                 autocomplete="off">
               <template #prefix>
                 <el-icon>

@@ -5,6 +5,7 @@
       @close="dialogShow"
       width="30%"
       draggable
+      destroy-on-close
       align-center>
     <el-form
         :model="incomeFormData"
@@ -23,8 +24,13 @@
         </ElConfigProvider>
       </el-form-item>
       <el-form-item label="金额(¥)" prop="amount">
-        <el-input :prefix-icon="Money" v-model="incomeFormData.amount" style="width: 100%" clearable
-                  placeholder="请输入金额"/>
+        <el-input
+            :prefix-icon="Money"
+            v-model="incomeFormData.amount"
+            style="width: 100%"
+            clearable
+            v-auto-focus
+            placeholder="请输入金额"/>
       </el-form-item>
       <el-form-item label="收入类型" prop="type">
         <el-radio-group v-model="incomeFormData.type">

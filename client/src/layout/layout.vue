@@ -71,7 +71,7 @@
     </div>
   </div>
 
-  <el-dialog v-model="peopleCenterVisible" title="个人信息修改" align-center width="40%">
+  <el-dialog v-model="peopleCenterVisible" title="个人信息修改" align-center width="40%" destroy-on-close>
     <el-form :model="peopleCenterForm" :rules="peopleCenterRules" label-width="90" ref="peopleCenterFormRef">
       <el-form-item label="用户名 : " prop="username">
         <el-input v-model="peopleCenterForm.username" disabled autocomplete="off" placeholder="用户名"/>
@@ -86,6 +86,7 @@
             maxlength="10"
             type="password"
             clearable
+            v-auto-focus
         />
       </el-form-item>
       <el-form-item label="确认密码 : " prop="checkPassword">
@@ -157,6 +158,7 @@ onMounted(async () => {
     type: 'success',
     offset: 50,
     duration: 1500,
+    position: 'bottom-right',
   })
 })
 
