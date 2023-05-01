@@ -82,6 +82,9 @@ router.get('/list', async (req, res) => {
       },
       offset,
       limit,
+      order: [  // 根据id倒序
+        ['id', 'DESC']
+      ]
     })
     const totalCount = await LendPeople.count({
       where: {

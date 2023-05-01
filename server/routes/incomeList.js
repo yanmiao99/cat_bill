@@ -87,7 +87,8 @@ router.get('/list', async (req, res) => {
         exclude: ['UserId', 'isDelete', 'createdAt', 'updatedAt']
       },
       offset,
-      limit
+      limit,
+      order: [['createdAt', 'DESC']]  // 倒序返回数据
     })
 
     const totalCount = await IncomeList.count({

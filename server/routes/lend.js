@@ -80,7 +80,8 @@ router.get('/list', async (req, res) => {
         exclude: ['isDelete', 'LendPersonId', 'createdAt', 'updatedAt']
       },
       offset,
-      limit
+      limit,
+      order: [['id', 'DESC']]  // 倒序返回数据
     })
     const totalCount = await Lend.count({
       where: {
