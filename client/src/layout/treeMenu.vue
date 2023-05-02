@@ -29,8 +29,6 @@
 
 
 <script setup>
-import {defineProps} from 'vue'
-
 defineProps({
   routerMenu: {
     type: Array,

@@ -2,6 +2,18 @@ import {createRouter, createWebHashHistory, RouteRecordRaw} from "vue-router";
 import {routerMenu} from "./routerMenu";
 import config from "../config/config";
 import storage from "../utils/storage";
+// @ts-ignore
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+// 进度条配置
+NProgress.configure({
+  easing: 'ease', // 动画方式
+  speed: 500, // 递增进度条的速度
+  showSpinner: false, // 是否显示加载 icon
+  trickleSpeed: 200, // 自动递增间隔
+  minimum: 0.3 // 初始化时的最小百分比
+})
 
 /*
 * createRouter 路由器
@@ -55,6 +67,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // 动态设置浏览器标题
   document.title = to.meta.title as string + ' - ' + config.globalName
+  // 页面加载进度条
+  NProgress.start() // 进度条开始
 
   const hasUserInfo = storage.getItem('userInfo')
   const hasToken = hasUserInfo?.token
@@ -66,6 +80,9 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach(() => {
+  NProgress.done() // 进度条结束
+})
 
 export default router
 

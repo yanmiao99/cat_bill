@@ -50,3 +50,8 @@
   font-size: 12px;
   margin-top: 10px;
 }
+
+// 页面加载进度条
+#nprogress .bar {
+  background-color: var(--el-color-primary) !important;
+}

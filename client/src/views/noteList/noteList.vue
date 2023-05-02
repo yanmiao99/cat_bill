@@ -1,6 +1,6 @@
 <template>
-  <div class="user-list">
-    用户列表
+  <div class="note-list">
+    笔记列表
   </div>
 </template>
 

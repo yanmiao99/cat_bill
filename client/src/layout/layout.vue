@@ -9,6 +9,7 @@
           class="el-menu-vertical"
           :collapse="isCollapse"
           router
+          :collapse-transition="false"
           :default-active="defaultActive">
         <treeMenu :routerMenu="routerMenu" :isCollapse="isCollapse"/>
       </el-menu>

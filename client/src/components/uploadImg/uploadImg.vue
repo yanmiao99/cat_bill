@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import {defineProps, defineEmits, nextTick, ref, watch} from 'vue'
+import { nextTick, ref } from 'vue'
 import {Delete, UploadFilled} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 import {uploadImage} from "@/api/upload";

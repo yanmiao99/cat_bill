@@ -39,31 +39,23 @@ export const routerMenu = [
     ],
   },
   {
-    name: 'userManage',
-    path: '/userManage',
-    icon: 'User',
+    name: 'noteManage',
+    path: '/noteManage',
+    icon: 'Notebook',
     meta: {
-      title: '用户管理',
+      title: '笔记管理',
       requireAuth: true,
     },
     children: [
       {
-        name: 'userList',
-        path: '/userList',
+        name: 'noteList',
+        path: '/noteList',
         meta: {
-          title: '用户列表',
+          title: '笔记列表',
           requireAuth: true,
         },
-        component: () => import('../views/userList/userList.vue'),
-      },
-      {
-        name: 'userAuth',
-        path: '/userAuth',
-        meta: {
-          title: '用户权限',
-          requireAuth: true,
-        },
-        component: () => import('../views/userAuth/userAuth.vue'),
+        // @ts-ignore
+        component: () => import('../views/noteList/noteList.vue'),
       },
     ],
   },
