@@ -6,7 +6,6 @@
   margin-bottom: 10px;
   border: 1px solid var(--el-border-color-lighter);
 
-
   .el-form {
     width: 100%;
     display: flex;
@@ -35,4 +34,8 @@
   justify-content: flex-end;
   border-top: 1px solid var(--el-border-color-lighter);
   z-index: 99;
+}
+
+[v-cloak] {
+  display: none;
 }

@@ -1,29 +1,21 @@
 <template>
   <div class="basic-layout">
     <div class="nav-side">
-      <div class="logo" v-show="!isCollapse">
+      <div class="logo">
         <img src="@/assets/images/logo.png" alt="logo">
-        <h1>{{ config.globalName }}</h1>
+        <h1 v-show="!isCollapse">{{ config.globalName }}</h1>
       </div>
       <el-menu
           class="el-menu-vertical"
           :collapse="isCollapse"
           router
-          :default-active="defaultActive"
-      >
-        <el-menu-item v-cloak :index="item.path" v-for="item in routerMenu" :key="item.name">
-          <el-icon>
-            <component :is="item.icon"/>
-          </el-icon>
-          <template #title>
-            <span>{{ item.meta?.title }}</span>
-          </template>
-        </el-menu-item>
+          :default-active="defaultActive">
+        <treeMenu :routerMenu="routerMenu" :isCollapse="isCollapse"/>
       </el-menu>
     </div>
     <div class="content-right">
       <div class="nav-top">
-        <div class="bread">
+        <div class="shrink">
           <div @click="handleIsCollapse">
             <el-icon v-if="isCollapse">
               <Expand/>
@@ -123,6 +115,7 @@ import {getCurrentUserInfo, postChangePassword} from "../api/user";
 import {ElMessage, ElNotification} from "element-plus";
 import {useDark} from "@vueuse/core";
 import {commonStore} from "../store/common";
+import TreeMenu from "./treeMenu.vue"
 
 const store = commonStore()
 
@@ -265,7 +258,7 @@ const handleExit = () => {
 
 
     .logo {
-      padding: 6px 20px 10px 20px;
+      padding: 6px 20px 10px v-bind("isCollapse ? '10px' : '20px'");
       text-align: center;
       display: flex;
       align-items: center;
@@ -287,31 +280,10 @@ const handleExit = () => {
     .el-menu-vertical {
       border-right: 0;
     }
-
-    .el-menu-item {
-      width: v-bind("isCollapse ? '100%' : '90%'");
-      margin: 0 auto;
-      transition: all 0.3s;
-
-      span {
-        opacity: v-bind("isCollapse ? '0' : '1'");
-      }
-
-      &:hover {
-        background-color: transparent;
-        color: var(--el-color-primary);
-      }
-
-      &.is-active {
-        background-color: var(--el-color-primary-light-9);
-        border-radius: 10px;
-      }
-    }
   }
 
   .content-right {
     margin-left: v-bind("isCollapse ? '65px' : '200px'");
-    //transition: margin-left 0.3s;
     transition: v-bind(isTransition);
 
     .nav-top {
@@ -329,7 +301,7 @@ const handleExit = () => {
       box-sizing: border-box;
       border-bottom: 1px solid var(--el-border-color-lighter);
 
-      .bread {
+      .shrink {
         margin-left: v-bind("isCollapse ? '65px' : '200px'");
         display: flex;
         align-items: center;
@@ -363,10 +335,6 @@ const handleExit = () => {
       height: calc(100% - 50px);
       padding: 65px 20px;
       box-sizing: border-box;
-
-      [v-cloak] {
-        display: none;
-      }
 
       .v-enter-active,
       .v-leave-active {
