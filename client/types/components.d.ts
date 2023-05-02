@@ -10,8 +10,8 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     404: typeof import('./../src/components/404.vue')['default']
-    BaseCharts: typeof import('./../src/components/base-charts/base-charts.vue')['default']
-    Chart: typeof import('../src/components/base-charts/base-charts.vue')['default']
+    BaseCharts: typeof import('./../src/components/baseCharts/baseCharts.vue')['default']
+    Chart: typeof import('../src/components/baseCharts/baseCharts.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
     ElCard: typeof import('element-plus/es')['ElCard']
@@ -53,7 +53,7 @@ declare module '@vue/runtime-core' {
     MenuTree: typeof import('./src/components/MenuTree.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    UploadImg: typeof import('./../src/components/upload-img/upload-img.vue')['default']
-    VCharts: typeof import('../src/components/base-charts/base-charts.vue')['default']
+    UploadImg: typeof import('./../src/components/uploadImg/uploadImg.vue')['default']
+    VCharts: typeof import('../src/components/baseCharts/baseCharts.vue')['default']
   }
 }

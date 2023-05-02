@@ -28,15 +28,16 @@
         </el-table-column>
         <el-table-column align="center" label="凭证" prop="voucher">
           <template #default="scope">
-            <div style="display: flex; align-items: center">
+            <div class="images-box">
               <el-image
                   style="width: 50px; height: 50px;border-radius: 5px;"
                   :src="scope.row.voucher"
                   :preview-teleported="true"
                   hide-on-click-modal
+                  fit="cover"
                   :preview-src-list="[scope.row.voucher]">
                 <template #error>
-                  <div class="image-slot">
+                  <div class="image-error">
                     <el-icon>
                       <Picture/>
                     </el-icon>
@@ -199,15 +200,9 @@ watch(
 </script>
 
 <style scoped lang="scss">
-// 加载失败
-.image-slot {
+.images-box {
   display: flex;
-  justify-content: center;
   align-items: center;
-  flex-direction: column;
-  color: #999;
-  font-size: 12px;
-  margin-top: 10px;
+  justify-content: center;
 }
-
 </style>

@@ -16,13 +16,22 @@
       <p>{{ tips }}</p>
     </div>
     <template #file="{ file }">
-      <div>
-        <img
-            v-if="lendFileList.length > 0"
-            class="el-upload-list__item-thumbnail"
-            :src="lendFileList[0].url"
-            alt="预览图"/>
-        <div class="el-upload-list__item-actions">
+      <el-image
+          class="el-upload-list__item-thumbnail"
+          v-if="lendFileList.length > 0"
+          :src="lendFileList[0].url"
+          hide-on-click-modal
+          fit="cover">
+        <template #error>
+          <div class="image-error">
+            <el-icon>
+              <Picture/>
+            </el-icon>
+            加载失败
+          </div>
+        </template>
+      </el-image>
+      <div class="el-upload-list__item-actions">
           <span
               class="el-upload-list__item-delete"
               @click="handleLendFormRemove()">
@@ -30,7 +39,6 @@
               <Delete/>
             </el-icon>
           </span>
-        </div>
       </div>
     </template>
   </el-upload>

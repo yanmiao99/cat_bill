@@ -40,16 +40,16 @@
         />
       </el-form-item>
       <el-form-item label="还款方式" prop="type">
-        <el-select v-model="lendFormDialogData.type" placeholder="请选择还款方式" style="width: 100%">
-          <el-option label="一次性还" :value="1"/>
-          <el-option label="分期还" :value="0"/>
-        </el-select>
+        <el-radio-group v-model="lendFormDialogData.type">
+          <el-radio :label="1" border>一次性还</el-radio>
+          <el-radio :label="0" border>分期还</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="结清" prop="settle">
-        <el-select v-model="lendFormDialogData.settle" placeholder="请选择结清" style="width: 100%">
-          <el-option label="已结清" :value="1"/>
-          <el-option label="未结清" :value="0"/>
-        </el-select>
+        <el-radio-group v-model="lendFormDialogData.settle">
+          <el-radio :label="0" border>未结清</el-radio>
+          <el-radio :label="1" border>已结清</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="原因" prop="reason">
         <el-input
@@ -87,7 +87,7 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import {addLendInfo, editLendInfo} from "@/api/lend";
 import dayjs from "dayjs";
 import {shortcuts} from "@/utils";
-import UploadImg from "@/components/upload-img/upload-img.vue";
+import UploadImg from "@/components/uploadImg/uploadImg.vue";
 
 const locale = ref(zhCn)
 

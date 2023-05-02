@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseEcharts from "../../components/base-charts/base-charts.vue";
+import BaseEcharts from "../../components/baseCharts/baseCharts.vue";
 //设置图表高度
 const echartsHeight = '500px'
 //图表自定义配置

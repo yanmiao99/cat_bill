@@ -39,3 +39,14 @@
 [v-cloak] {
   display: none;
 }
+
+// 图片加载失败
+.image-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #999;
+  font-size: 12px;
+  margin-top: 10px;
+}

@@ -38,4 +38,33 @@ export const routerMenu = [
       }
     ],
   },
+  {
+    name: 'userManage',
+    path: '/userManage',
+    icon: 'User',
+    meta: {
+      title: '用户管理',
+      requireAuth: true,
+    },
+    children: [
+      {
+        name: 'userList',
+        path: '/userList',
+        meta: {
+          title: '用户列表',
+          requireAuth: true,
+        },
+        component: () => import('../views/userList/userList.vue'),
+      },
+      {
+        name: 'userAuth',
+        path: '/userAuth',
+        meta: {
+          title: '用户权限',
+          requireAuth: true,
+        },
+        component: () => import('../views/userAuth/userAuth.vue'),
+      },
+    ],
+  },
 ]
