@@ -240,10 +240,10 @@ watch(
 </script>
 
 <style scoped lang="scss">
-.lend {
-  // 用于解决遮罩层被表格遮挡的 bug
-  :deep(.el-table .el-table__cell) {
-    position: unset !important;
-  }
-}
+//.lend {
+//  // 用于解决遮罩层被表格遮挡的 bug
+//  :deep(.el-table .el-table__cell) {
+//    position: unset !important;
+//  }
+//}
 </style>

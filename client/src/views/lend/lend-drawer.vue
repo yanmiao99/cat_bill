@@ -28,20 +28,23 @@
         </el-table-column>
         <el-table-column align="center" label="凭证" prop="voucher">
           <template #default="scope">
-            <el-image
-                style="width: 50px; height: 50px;border-radius: 5px;"
-                :src="scope.row.voucher"
-                hide-on-click-modal
-                :preview-src-list="[scope.row.voucher]">
-              <template #error>
-                <div class="image-slot">
-                  <el-icon>
-                    <Picture/>
-                  </el-icon>
-                  加载失败
-                </div>
-              </template>
-            </el-image>
+            <div style="display: flex; align-items: center">
+              <el-image
+                  style="width: 50px; height: 50px;border-radius: 5px;"
+                  :src="scope.row.voucher"
+                  :preview-teleported="true"
+                  hide-on-click-modal
+                  :preview-src-list="[scope.row.voucher]">
+                <template #error>
+                  <div class="image-slot">
+                    <el-icon>
+                      <Picture/>
+                    </el-icon>
+                    加载失败
+                  </div>
+                </template>
+              </el-image>
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" label="结清" prop="settle" sortable>
@@ -56,7 +59,7 @@
             <p v-else> -- </p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="130">
+        <el-table-column align="center" label="操作" width="130" fixed="right">
           <template #default="scope">
             <el-button plain type="primary" :icon="Edit" @click="handleDialogAddOrEdit('edit',scope.row)"/>
             <el-popconfirm title="你确定删除该条数据吗?" @confirm="handleLendDelete(scope.row)">
