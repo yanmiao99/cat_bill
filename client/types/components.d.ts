@@ -53,6 +53,7 @@ declare module '@vue/runtime-core' {
     MenuTree: typeof import('./src/components/MenuTree.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UploadImg: typeof import('./../src/components/upload-img/upload-img.vue')['default']
     VCharts: typeof import('../src/components/base-charts/base-charts.vue')['default']
   }
 }

@@ -5,6 +5,7 @@
       width="40%"
       draggable
       @close="dialogShow"
+      destroy-on-close
       align-center>
     <el-form
         :model="lendFormDialogData"
@@ -33,41 +34,10 @@
                   placeholder="请输入利息"/>
       </el-form-item>
       <el-form-item label="凭证" prop="voucher">
-        <el-upload
-            action=""
-            :auto-upload="true"
-            :limit="1"
-            :http-request="handleUploadFile"
-            :before-upload="handleLendFormBeforeUpload"
-            v-model:file-list="lendFileList"
-            list-type="picture-card"
-            accept=".jpg,.jpeg,.png,JPG,JPEG,PNG"
-        >
-          <div class="el-upload__text" style="text-align: center">
-            <el-icon>
-              <upload-filled/>
-            </el-icon>
-            <p>上传凭证</p>
-          </div>
-          <template #file="{ file }">
-            <div>
-              <img
-                  v-if="lendFormDialogData.voucher"
-                  class="el-upload-list__item-thumbnail"
-                  :src="lendFormDialogData.voucher"
-                  alt=""/>
-              <div class="el-upload-list__item-actions">
-                <span
-                    class="el-upload-list__item-delete"
-                    @click="handleLendFormRemove()">
-                  <el-icon>
-                    <Delete/>
-                  </el-icon>
-                </span>
-              </div>
-            </div>
-          </template>
-        </el-upload>
+        <upload-img
+            tips="上传凭证"
+            v-model:file="lendFormDialogData.voucher"
+        />
       </el-form-item>
       <el-form-item label="还款方式" prop="type">
         <el-select v-model="lendFormDialogData.type" placeholder="请选择还款方式" style="width: 100%">
@@ -98,7 +68,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="handleLendFormResize(lendFormRef)">重 置</el-button>
+        <el-button @click="handleLendFormResize()">重 置</el-button>
         <el-button
             type="primary"
             @click="handleLendFormDialogSubmit(lendFormRef)">
@@ -111,13 +81,13 @@
 
 <script setup>
 import {ElConfigProvider, ElMessage} from 'element-plus'
-import {Delete, Money, UploadFilled} from "@element-plus/icons-vue";
-import {nextTick, ref, watch} from "vue";
+import {Money} from "@element-plus/icons-vue";
+import {ref, watch} from "vue";
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import {uploadImage} from "@/api/upload";
 import {addLendInfo, editLendInfo} from "@/api/lend";
 import dayjs from "dayjs";
 import {shortcuts} from "@/utils";
+import UploadImg from "@/components/upload-img/upload-img.vue";
 
 const locale = ref(zhCn)
 
@@ -148,19 +118,10 @@ const dialogShow = () => {
   emit('update:visible', false)
 }
 
-watch(
-    () => ({
-      data: props.data
-    }),
-    async (newVal, oldVal) => {
-      if (newVal.data !== oldVal.data) {
-        initData()
-      }
-    }
-)
-
 // 标题
 const dialogTitle = ref('')
+
+const lendFormRef = ref(null)
 
 // 表单数据
 const lendFormDialogData = ref({
@@ -172,7 +133,7 @@ const lendFormDialogData = ref({
   interest: null,
   reason: '',
   type: 1,
-  voucher: '',
+  voucher: null,
   settle: 0,
   remark: '',
 })
@@ -212,63 +173,11 @@ const lendRules = ref({
   ]
 })
 
-// 弹窗表单
-const lendFormRef = ref(null)
-
-// 图片上传的列表
-const lendFileList = ref([])
-
-// 设置图片上传显示和隐藏
-const setFileListShow = (show) => {
-  nextTick(() => {
-    let card = document.querySelector('.el-upload--picture-card')
-    card.style.display = show ? 'inline-flex' : 'none'
-  })
-}
-
-// 处理图片移除
-const handleLendFormRemove = () => {
-  lendFileList.value = []
-  lendFormDialogData.value.voucher = ''
-  if (lendFileList.value.length === 0) {
-    setFileListShow(true)
-  }
-}
-
-// 图片上传处理钩子
-const handleLendFormBeforeUpload = (file) => {
-  const isPng = /image\/png/.test(file.type);
-  const isJpg = /image\/jpeg|image\/jpg/.test(file.type);
-  const isLt2M = file.size / 1024 / 1024 < 2;
-
-  if (!isPng && !isJpg) {
-    ElMessage.error('只能上传 PNG 或 JPG 格式的图片！');
-  }
-
-  if (!isLt2M) {
-    ElMessage.error('上传图片大小不能超过 2MB！');
-  }
-
-  return (isPng || isJpg) && isLt2M;
-}
-
-// 图片上传
-const handleUploadFile = async (file) => {
-  const formData = new FormData()
-  formData.append('file', file.file)
-  let res = await uploadImage(formData)
-  lendFormDialogData.value.voucher = res.url
-
-  if (lendFileList.value.length > 0) {
-    setFileListShow(false)
-  }
-}
-
 // 处理数据
 const initData = () => {
   dialogTitle.value = props.type === 'add' ? '新增借款记录' : '编辑借款记录'
   if (props.type === 'add') {
-    handleLendFormResize(lendFormRef.value)
+    handleLendFormResize()
   } else {
     let formatDate = [dayjs(props.data.date).format('YYYY-MM-DD')]
     let formatRepaymentDate = [dayjs(props.data.repaymentDate).format('YYYY-MM-DD')]
@@ -277,14 +186,9 @@ const initData = () => {
       date: formatDate,
       repaymentDate: formatRepaymentDate,
       type: props.data.type === '一次性还' ? 1 : 0,
-      settle: props.data.settle === '已结清' ? 1 : 0
+      settle: props.data.settle === '已结清' ? 1 : 0,
     }
     lendFormDialogDate.value = [formatDate, formatRepaymentDate]
-    lendFileList.value = [{
-      name: '编辑回显的图片',
-      url: props.data.voucher
-    }]
-    setFileListShow(false)
   }
 }
 
@@ -315,22 +219,19 @@ const handleLendFormDialogSubmit = async (formEl) => {
 
         }
       }
-      handleLendFormResize(formEl)
+      handleLendFormResize()
       dialogShow()
     } else {
       console.log(fields);
-      ElMessage.error('请检查表单数据')
+      ElMessage.error('请检查表单数据的完整性')
       return false
     }
   })
 }
 
 // 重置表单
-const handleLendFormResize = (formEl) => {
-  if (!formEl) return
+const handleLendFormResize = () => {
   lendFormDialogDate.value = []
-  lendFileList.value = []
-  setFileListShow(true)
   lendFormDialogData.value = {
     LendPersonId: null,
     date: '',
@@ -339,12 +240,21 @@ const handleLendFormResize = (formEl) => {
     interest: null,
     reason: '',
     type: 1,
-    voucher: '',
+    voucher: null,
     settle: 0,
     remark: ''
   }
-  formEl.resetFields()
 }
 
+watch(
+    () => ({
+      data: props.data
+    }),
+    async (newVal, oldVal) => {
+      if (newVal.data !== oldVal.data) {
+        initData()
+      }
+    }
+)
 
 </script>
