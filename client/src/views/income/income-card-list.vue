@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from "vue";
+import {ref} from "vue";
 import {getIncomeListBoard} from "@/api/incomeList";
 import {incomeStore} from "@/store/income";
 import {storeToRefs} from "pinia";
@@ -67,10 +67,6 @@ const getBoardData = async () => {
     }
   ]
 }
-
-onMounted(() => {
-  getBoardData()
-})
 
 const cardList = ref([])
 

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     // 统一管理ts生成的d.ts声明文件
     "typeRoots": [
       "./types"

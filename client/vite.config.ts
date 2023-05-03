@@ -9,6 +9,7 @@ import path from 'path'
 
 // @ts-ignore
 export default defineConfig({
+  base: "./", //等同于  assetsPublicPath :'./'
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

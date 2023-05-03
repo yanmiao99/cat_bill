@@ -8,11 +8,11 @@ import '@/styles/index.scss'
 
 import App from './App.vue'
 import {createPinia} from 'pinia'
+const pinia = createPinia();
 import router from './router/router'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const app = createApp(App)
-const pinia = createPinia();
 
 // 引入 icon
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -32,8 +32,8 @@ app.directive("auto-focus", {
 
 
 app
+  .use(pinia)
   .use(router)
   .use(ElementPlus)
-  .use(pinia)
   .mount('#app')
 

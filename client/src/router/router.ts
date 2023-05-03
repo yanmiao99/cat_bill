@@ -5,6 +5,7 @@ import storage from "../utils/storage";
 // @ts-ignore
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import {load} from "../components/loading/loading.js"
 
 // 进度条配置
 NProgress.configure({
@@ -69,6 +70,7 @@ router.beforeEach((to, from, next) => {
   document.title = to.meta.title as string + ' - ' + config.globalName
   // 页面加载进度条
   NProgress.start() // 进度条开始
+  load.show()
 
   const hasUserInfo = storage.getItem('userInfo')
   const hasToken = hasUserInfo?.token
@@ -81,6 +83,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach(() => {
+  load.hide()
   NProgress.done() // 进度条结束
 })
 

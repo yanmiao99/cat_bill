@@ -30,3 +30,22 @@ export const shortcuts = [
     value: () => getDateRange(365, 0),
   }
 ]
+
+// 获取系统色系
+export const getTheme = () => {
+  let resTheme = ''
+  let theme = window.localStorage.getItem('vueuse-color-scheme');
+  if (theme === 'dark') {
+    resTheme = 'dark'
+  } else if (theme === 'light') {
+    resTheme = ''
+  } else {
+    const media = window.matchMedia('(prefers-color-scheme:dark)');
+    if (media.matches) {
+      resTheme = 'dark'
+    } else {
+      resTheme = ''
+    }
+  }
+  return resTheme
+}

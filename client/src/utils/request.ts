@@ -31,11 +31,11 @@ service.interceptors.request.use((req) => {
   }
   if (!headers.Authorization) headers.Authorization = 'Bearer ' + token
 
-  // 开启 loading 定时器，500ms 后再显示 loading , 并且 将定时器存储到请求参数中
+  // 开启 loading 定时器，定时器结束后再显示 loading , 并且 将定时器存储到请求参数中
   // @ts-ignore
   req.timer = setTimeout(() => {
     load.show()
-  }, 500)
+  }, 1000)
 
   return req;
 })
