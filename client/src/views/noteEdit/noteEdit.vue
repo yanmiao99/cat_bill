@@ -206,7 +206,8 @@ watch(
         state.theme = 'light'
       }
       if (newVal.currentPath !== '/noteEdit') {
-        alert('保存了吗')
+        // alert('保存了吗')
+        console.log('需要提示保存');
       }
     },
     {immediate: true}

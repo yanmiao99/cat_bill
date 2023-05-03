@@ -26,6 +26,7 @@
               <Fold/>
             </el-icon>
           </div>
+          <bread-crumb/>
         </div>
         <div class="user-info">
           <!-- 下拉菜单 -->
@@ -118,6 +119,7 @@ import {ElMessage, ElNotification} from "element-plus";
 import {useDark} from "@vueuse/core";
 import {commonStore} from "../store/common";
 import TreeMenu from "./treeMenu.vue"
+import BreadCrumb from "./breadCrumb.vue";
 
 const store = commonStore()
 
@@ -310,6 +312,9 @@ const handleExit = () => {
 
         .el-icon {
           margin-right: 10px;
+          font-size: 16px;
+          color: #333;
+          margin-top: 1px;
           cursor: pointer;
         }
       }

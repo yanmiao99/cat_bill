@@ -33,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     redirect: '/home', // 必须使用 path 或者 name
     meta: {
-      title: '首页',
+      title: '云水',
       requireAuth: false,
     },
     component: () => import('../layout/layout.vue'),
