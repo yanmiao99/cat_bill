@@ -78,6 +78,27 @@ defineProps({
       color: var(--el-color-primary);
     }
   }
-
 }
+
+.is-active {
+  :deep(.el-sub-menu__title) {
+    position: relative;
+    color: var(--el-color-primary);
+    transition: all 0.3s;
+
+    &:before {
+      height: 50%;
+      position: absolute;
+      top: 50%;
+      right: 5px;
+      transform: translateY(-50%);
+      content: '';
+      background: var(--el-color-primary);
+      width: 2px;
+      border-radius: 2px;
+    }
+  }
+}
+
+
 </style>

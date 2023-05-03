@@ -19,10 +19,10 @@ const loadingTitleColor = ref('')
 
 
 if (getTheme() === 'dark') {
-  loadingBg.value = '#303133'
+  loadingBg.value = 'rgba(52,52,54,0.8)'
   loadingTitleColor.value = 'rgb(255 255 255 / 85%)'
 } else {
-  loadingBg.value = '#ffffff'
+  loadingBg.value = 'rgba(255, 255, 255, 0.8)'
   loadingTitleColor.value = '#4B9E5F'
 }
 
