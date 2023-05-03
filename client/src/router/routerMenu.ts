@@ -54,8 +54,16 @@ export const routerMenu = [
           title: '笔记列表',
           requireAuth: true,
         },
-        // @ts-ignore
         component: () => import('../views/noteList/noteList.vue'),
+      },
+      {
+        name: 'noteEdit',
+        path: '/noteEdit',
+        meta: {
+          title: '笔记详情',
+          requireAuth: true,
+        },
+        component: () => import('../views/noteEdit/noteEdit.vue'),
       },
     ],
   },

@@ -1,17 +1,17 @@
 import {createApp, nextTick} from 'vue'
 import "@/styles/reset.css"
+import 'normalize.css'
 import '@/styles/common.scss'
 import 'element-plus/dist/index.css'
 import ElementPlus from 'element-plus'
 import '@/styles/index.scss'
 
-
 import App from './App.vue'
 import {createPinia} from 'pinia'
-const pinia = createPinia();
 import router from './router/router'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+const pinia = createPinia();
 const app = createApp(App)
 
 // 引入 icon
@@ -29,7 +29,6 @@ app.directive("auto-focus", {
     })
   }
 })
-
 
 app
   .use(pinia)

@@ -16,6 +16,8 @@
     "dayjs": "^1.11.7",
     "echarts": "^5.4.2",
     "element-plus": "^2.2.32",
+    "md-editor-v3": "^3.0.0",
+    "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.32",
     "vue": "^3.2.45",
