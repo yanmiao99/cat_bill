@@ -1,24 +1,31 @@
 <template>
   <el-row :gutter="20">
-    <el-col :xs="24" :sm="12" :md="12" :lg="6" v-for="item in cardList" :key="item.title">
-      <el-card shadow="hover">
-        <div class="card_bg">
-          {{ item.bgText }}
-        </div>
-        <div class="card_content">
-          <p class="title">{{ item.title }}</p>
-          <p class="amount">
-            <count-to
-                prefix="￥"
-                :startVal="0"
-                :endVal="item.value"
-                :decimals="2"
-                class="money"
-                :duration="500"/>
-          </p>
-        </div>
-      </el-card>
-    </el-col>
+    <template v-if="cardList.length">
+      <el-col :xs="24" :sm="12" :md="12" :lg="6" v-for="item in cardList" :key="item.title">
+        <el-card shadow="hover">
+          <div class="card_bg">
+            {{ item.bgText }}
+          </div>
+          <div class="card_content">
+            <p class="title">{{ item.title }}</p>
+            <p class="amount">
+              <count-to
+                  prefix="￥"
+                  :startVal="0"
+                  :endVal="item.value"
+                  :decimals="2"
+                  class="money"
+                  :duration="500"/>
+            </p>
+          </div>
+        </el-card>
+      </el-col>
+    </template>
+    <template v-else>
+      <el-col :xs="24" :sm="12" :md="12" :lg="6" style="margin-bottom: 20px" v-for="item in 4" :key="item">
+        <el-skeleton :rows="3" animated/>
+      </el-col>
+    </template>
   </el-row>
 </template>
 
@@ -102,6 +109,8 @@ const cardList = ref([])
     .amount {
       margin-top: 20px;
       color: var(--el-color-primary);
+      position: relative;
+      z-index: 3;
 
       .money {
         font-weight: bold;
