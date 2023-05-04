@@ -60,11 +60,21 @@ export const routerMenu = [
         name: 'noteEdit',
         path: '/noteEdit',
         meta: {
-          title: '笔记详情',
+          title: '笔记编写',
           requireAuth: true,
         },
         component: () => import('../views/noteEdit/noteEdit.vue'),
       },
+      {
+        name: 'noteLabelsAndCategory',
+        path: '/noteLabelsAndCategory',
+        meta: {
+          title: '标签&分类',
+          requireAuth: true,
+        },
+// @ts-ignore
+        component: () => import('../views/noteLabelsAndCategory/noteLabelsAndCategory.vue'),
+      }
     ],
   },
 ]

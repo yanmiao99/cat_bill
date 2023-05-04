@@ -8,7 +8,7 @@
               v-model="state.title"
               placeholder="笔记标题"
           />
-          <el-button type="primary">发布</el-button>
+          <el-button type="primary" @click="handleSubmit">发布</el-button>
         </div>
       </template>
       <MdEditor
@@ -191,8 +191,9 @@ onMounted(() => {
 
 const route = useRoute()
 
-console.log(route.path);
-
+const handleSubmit = () =>{
+  console.log(state.text);
+}
 
 watch(
     () => ({
