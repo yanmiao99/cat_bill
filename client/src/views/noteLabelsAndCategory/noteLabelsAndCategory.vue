@@ -10,7 +10,7 @@
           size="large"
       >
         <div class="tag-box">
-          <span class="tag-text">{{ tag }}</span>
+          <span class="tag-text">{{ tag.tag }}</span>
           <el-icon @click="handleEdit(tag)">
             <Edit/>
           </el-icon>
@@ -36,7 +36,6 @@
         + 添加标签
       </el-button>
     </el-card>
-    <!-- 编辑弹窗 -->
     <el-dialog v-model="editDialogVisible" title="编辑内容" width="30%">
       <el-form :model="editDialog">
         <el-form-item label="名称" :label-width="60">
@@ -46,7 +45,7 @@
       <template #footer>
       <span class="dialog-footer">
         <el-button @click="editDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="editDialogVisible = false">
+        <el-button type="primary" @click="handleEditConfirm">
           确定
         </el-button>
       </span>
@@ -57,6 +56,8 @@
 
 <script setup>
 import {nextTick, ref} from 'vue'
+import {addNoteTagInfo, deleteNoteTagInfo, editNoteTagInfo, getNoteTagInfo} from '@/api/noteLabelsAndCategory'
+import {ElMessage} from "element-plus";
 
 const inputValue = ref('')
 const dynamicTags = ref([])
@@ -69,13 +70,39 @@ const editDialog = ref({
 })
 
 // 关闭标签
-const handleClose = (tag) => {
-  dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+const handleClose = async ({id}) => {
+  try {
+    await deleteNoteTagInfo({
+      id,
+      type: 1
+    })
+    ElMessage.success('删除成功')
+    await getTagAllData()
+  } catch (e) {
+  }
 }
 
 // 编辑标签
-const handleEdit = (tag) => {
+const handleEdit = async ({id, tag, type}) => {
   editDialogVisible.value = true
+  editDialog.value = {
+    id,
+    tag,
+    type,
+  }
+}
+
+const handleEditConfirm = async () => {
+  try {
+    await editNoteTagInfo({
+      ...editDialog.value
+    })
+    ElMessage.success('编辑成功')
+    await getTagAllData()
+    editDialogVisible.value = false
+  } catch (e) {
+
+  }
 }
 
 // 显示输入框并聚焦
@@ -86,14 +113,33 @@ const showInput = () => {
   })
 }
 
-// 输入框失去焦点
-const handleInputConfirm = () => {
+// 添加标签
+const handleInputConfirm = async () => {
   if (inputValue.value) {
-    dynamicTags.value.push(inputValue.value)
+    try {
+      await addNoteTagInfo({
+        tag: inputValue.value,
+        type: 1
+      })
+      ElMessage.success('添加成功')
+      await getTagAllData()
+    } catch (err) {
+    }
   }
   inputVisible.value = false
   inputValue.value = ''
 }
+const getTagAllData = async () => {
+  const {list} = await getNoteTagInfo({
+    type: 1
+  })
+  dynamicTags.value = list
+}
+
+onMounted(() => {
+  getTagAllData()
+})
+
 </script>
 
 <style scoped lang="scss">
@@ -118,7 +164,6 @@ const handleInputConfirm = () => {
       .tag-text {
         margin-right: 5px;
       }
-
     }
   }
 }

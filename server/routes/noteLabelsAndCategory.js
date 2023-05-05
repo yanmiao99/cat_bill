@@ -20,6 +20,38 @@ router.post('/add',
     } = req.body
     const currentUserId = req.user.id
 
+    // 校验是否已经存在
+    const isExist = await NoteLabelsAndCategory.findOne({
+      where: {
+        tag,
+        type,
+        UserId: currentUserId,
+        isDelete: 0
+      }
+    })
+    if (isExist) {
+      const message = '该标签已存在'
+      log4js.error(message)
+      res.send({
+        code: 400,
+        msg: message,
+        data: null
+      })
+      return
+    }
+
+    // 限制字符长度在5个字符以内
+    if (tag.length > 5) {
+      const message = '标签名称长度不能超过5个字符'
+      log4js.error(message)
+      res.send({
+        code: 400,
+        msg: message,
+        data: null
+      })
+      return
+    }
+
     try {
       await NoteLabelsAndCategory.create({
         tag, type,
@@ -60,7 +92,7 @@ router.get('/list', async (req, res) => {
       attributes: { // 设置排除的字段
         exclude: ['UserId', 'isDelete', 'createdAt', 'updatedAt']
       },
-      order: [['createdAt', 'DESC']]  // 倒序返回数据
+      // order: [['createdAt', 'DESC']]  // 倒序返回数据
     })
 
     log4js.info(`查询标签记录成功`)
@@ -144,7 +176,7 @@ router.post("/delete", async (req, res) => {
  * @apiParam {Number} id 标签id
  *
  */
-// 修改一条借出记录
+// 修改一条记录
 router.post("/update",
   validateParams({
     id: '缺少必传参数 id (标签id)',

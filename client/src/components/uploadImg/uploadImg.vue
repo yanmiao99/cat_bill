@@ -117,3 +117,30 @@ const handleUploadFile = async (file) => {
 }
 
 </script>
+
+<style lang="scss" scoped>
+// 上传图片展示的大小
+:deep(.el-upload-list__item) {
+  width: 80px !important;
+  height: 80px !important;
+  margin: 3px !important;
+}
+
+// 加号背景大小
+:deep(.el-upload--picture-card) {
+  width: 80px !important;
+  height: 80px !important;
+  margin: 3px !important;
+}
+
+// 上传盒子总体的大小
+:deep(.el-upload-list--picture-card) {
+  width: 268px;
+}
+
+:deep(.el-upload__text){
+  p{
+    margin-top: -10px;
+  }
+}
+</style>
