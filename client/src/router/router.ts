@@ -70,7 +70,7 @@ router.beforeEach((to, from, next) => {
   document.title = to.meta.title as string + ' - ' + config.globalName
   // 页面加载进度条
   NProgress.start() // 进度条开始
-  load.show()
+  //load.show()
 
   const hasUserInfo = storage.getItem('userInfo')
   const hasToken = hasUserInfo?.token
@@ -80,10 +80,11 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
+  next()
 })
 
 router.afterEach(() => {
-  load.hide()
+  //load.hide()
   NProgress.done() // 进度条结束
 })
 

@@ -23,7 +23,7 @@ if (getTheme() === 'dark') {
   loadingTitleColor.value = 'rgb(255 255 255 / 85%)'
 } else {
   loadingBg.value = 'rgba(255, 255, 255, 0.8)'
-  loadingTitleColor.value = '#4B9E5F'
+  loadingTitleColor.value = '#6B5DD3'
 }
 
 const props = defineProps({
@@ -87,7 +87,7 @@ const props = defineProps({
   display: block;
   width: 20px;
   height: 20px;
-  background: #4B9E5F;
+  background: #6B5DD3;
   border-radius: 100%;
   opacity: 30%;
   transform: scale(0.75);

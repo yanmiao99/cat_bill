@@ -3,24 +3,73 @@
     <el-card class="box-card">
       <template #header>
         <div class="card-header">
-          <span>新增笔记</span>
-          <el-input
-              v-model="state.title"
-              placeholder="笔记标题"
-          />
+          <span>{{ dialogTitle }}</span>
           <el-button type="primary" @click="handleSubmit">发布</el-button>
         </div>
       </template>
       <MdEditor
-          v-model="state.text"
+          v-model="state.detail"
           :theme="state.theme"
           placeholder="开始写笔记吧~"
           ref="editorRef"
           style="height: 100%"
           :toolbars="toolbars"
           :previewTheme="state.previewTheme"
+          @onUploadImg="onUploadImg"
       />
     </el-card>
+
+    <BasicDialog
+        v-model="visible"
+        :title='dialogTitle'
+        width="500"
+        @confirm="handleSubmitConfirm"
+    >
+      <div class="dialog-content">
+        <el-form
+            style="width: 100%"
+            :model="noteModal"
+        >
+          <el-form-item label="标题">
+            <el-input
+                v-model="noteModal.title"
+                clearable
+                style="width:100%"
+                placeholder="请输入标题">
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="标签">
+            <el-select v-model="noteModal.tag" multiple placeholder="请选择标签" style="width: 100%">
+              <el-option
+                  v-for="item in noteModalTagList"
+                  :key="item.id"
+                  :label="item.tag"
+                  :value="item.tag">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="分类">
+            <el-select v-model="noteModal.category" multiple placeholder="请选择分类" style="width: 100%">
+              <el-option
+                  v-for="item in noteModalCategoryList"
+                  :key="item.id"
+                  :label="item.tag"
+                  :value="item.tag">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="封面">
+            <upload-img
+                tips="上传封面"
+                v-model:file="noteModal.cover"
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+    </BasicDialog>
   </div>
 </template>
 
@@ -29,7 +78,24 @@ import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import {commonStore} from "@/store/common";
 import {reactive, watch} from "vue";
-import {useRouter, useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
+import {useBasicDialog} from "@/hooks/basicDialog/useBasicDialog.js";
+import BasicDialog from "@/hooks/basicDialog/basicDialog.vue";
+import UploadImg from "@/components/uploadImg/uploadImg.vue";
+import {getNoteTagInfo} from "@/api/noteLabelsAndCategory";
+import {addNote, getNoteList, updateNote} from "@/api/noteList";
+import {uploadImage} from "@/api/upload";
+import {ElMessage} from "element-plus";
+
+const router = useRouter()
+const route = useRoute()
+
+const {
+  visible,
+  title,
+  openDialog,
+  closeDialog,
+} = useBasicDialog()
 
 MdEditor.config({
   editorConfig: {
@@ -180,19 +246,114 @@ const store = commonStore()
 const state = reactive({
   theme: 'light', // dark , light
   previewTheme: 'github',
-  text: '', // 编辑器内容
-  title: '' // 笔记标题
+  detail: '', // 编辑器内容
 });
 
 const editorRef = ref(null);
-onMounted(() => {
-  editorRef.value?.focus();
+
+// 笔记内容
+const noteModal = ref({
+  cover: '',
+  title: '',
+  detail: '',
+  tag: [],
+  category: [],
 })
 
-const route = useRoute()
+const noteModalTagList = ref([])
+const noteModalCategoryList = ref([])
 
-const handleSubmit = () =>{
-  console.log(state.text);
+const dialogTitle = ref('新增笔记')
+
+onMounted(() => {
+  editorRef.value?.focus();
+
+  console.log(route.query);
+  if (route.query.id) {
+    dialogTitle.value = '编辑笔记'
+    getNoteDetail()
+  }
+})
+
+// 提交
+const handleSubmit = () => {
+  noteModal.value.detail = state.detail
+  getTagAndCategory()
+  openDialog()
+}
+
+// 提交确认
+const handleSubmitConfirm = async () => {
+  const type = route?.query?.type
+  let res = null
+  if (type && type === 'edit') {
+    res = await updateNote({
+      id: route.query.id,
+      ...noteModal.value
+    })
+  } else {
+    res = await addNote({
+      ...noteModal.value
+    })
+  }
+
+  if (res) {
+    closeDialog()
+    router.push({
+      path: '/noteList'
+    })
+  }
+}
+
+// 获取标签和分类
+const getTagAndCategory = async () => {
+  const {list} = await getNoteTagInfo()
+
+  let tagList = []
+  let categoryList = []
+  if (list && list.length) {
+
+    list.forEach(item => {
+      if (item.type === 1) {
+        tagList.push(item)
+      } else if (item.type === 2) {
+        categoryList.push(item)
+      }
+    })
+
+    noteModalTagList.value = tagList
+    noteModalCategoryList.value = categoryList
+  }
+}
+
+// 获取单条数据
+const getNoteDetail = async () => {
+  const res = await getNoteList({
+    id: route.query.id
+  })
+  if (res) {
+    noteModal.value = {
+      ...res.list[0],
+    }
+    state.detail = res.list[0].detail
+  }
+}
+
+// 处理编辑器上传图片
+const onUploadImg = async (files, callback) => {
+  const res = await Promise.all(
+      files.map((file) => {
+        return new Promise((rev, rej) => {
+          const form = new FormData();
+          form.append('file', file);
+          uploadImage(form)
+              .then((res) => rev(res))
+              .catch((error) => rej(error));
+        });
+      })
+  );
+
+  callback(res.map((item) => item.url));
 }
 
 watch(
@@ -240,5 +401,10 @@ watch(
       margin: 0 20px;
     }
   }
+}
+
+.dialog-content {
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 </style>

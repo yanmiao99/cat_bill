@@ -31,8 +31,8 @@ app.directive("auto-focus", {
 })
 
 app
-  .use(pinia)
-  .use(router)
-  .use(ElementPlus)
-  .mount('#app')
+    .use(pinia)
+    .use(router)
+    .use(ElementPlus)
+    .mount('#app')
 

@@ -11,6 +11,8 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     404: typeof import('./../src/components/404.vue')['default']
     BaseCharts: typeof import('./../src/components/baseCharts/baseCharts.vue')['default']
+    BasicDialog: typeof import('./../src/components/basicDialog/basicDialog.vue')['default']
+    BasicTable: typeof import('./../src/components/basicTable/basicTable.vue')['default']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -45,10 +47,15 @@ declare module '@vue/runtime-core' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElText: typeof import('element-plus/es')['ElText']
+    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     Loading: typeof import('./../src/components/loading/loading.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TagEdit: typeof import('./../src/components/tagEdit/tagEdit.vue')['default']
     UploadImg: typeof import('./../src/components/uploadImg/uploadImg.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

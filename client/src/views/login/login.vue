@@ -195,13 +195,12 @@ const loginFn = async (formEl: any) => {
 }
 
 const registerFn = async (formEl: any) => {
-  try {
-    await postRegister(userForm.value)
+  let res = await postRegister(userForm.value)
+  if (res) {
     // 完成提交, 清空表单
     formEl.resetFields()
     ElMessage.success('注册成功, 请登录')
     toggleLoginOrRegister('login')
-  } catch (e) {
   }
 }
 
